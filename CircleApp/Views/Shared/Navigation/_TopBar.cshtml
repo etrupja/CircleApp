@@ -1,0 +1,88 @@
+﻿<header class="z-[100] h-[--m-top] fixed top-0 left-0 w-full flex items-center bg-white/80 sky-50 backdrop-blur-xl border-b border-slate-200">
+    <div class="2xl:w-[--w-side] lg:w-[--w-side-sm]">
+        <div class="flex items-center gap-1">
+            <button uk-toggle="target: #site__sidebar ; cls :!-translate-x-0"
+                    class="flex items-center justify-center w-8 h-8 text-xl rounded-full hover:bg-gray-100 xl:hidden group">
+                <ion-icon name="menu-outline" class="text-2xl group-aria-expanded:hidden"></ion-icon>
+                <ion-icon name="close-outline" class="hidden text-2xl group-aria-expanded:block"></ion-icon>
+            </button>
+
+            <div id="logo" class="flex items-center">
+                <a class="flex items-center">
+                    <img src="~/images/logo.png" class="w-10 md:block hidden" />
+                    <span class="ml-2">Circle App</span>
+                </a>
+            </div>
+
+        </div>
+    </div>
+    <div class="flex-1 relative">
+        <div class="max-w-[1220px] mx-auto flex items-center">
+            <form id="search--box"
+                  class="xl:w-[680px] sm:w-96 sm:relative rounded-xl overflow-hidden z-20 bg-secondery max-md:hidden w-screen left-0 max-sm:fixed max-sm:top-2">
+
+                <ion-icon name="search" class="absolute left-4 top-1/2 -translate-y-1/2"></ion-icon>
+                <input type="text" name="query" placeholder="Search Posts, Friends..." class="w-full !pl-10 !font-normal !bg-transparent h-12 !text-sm" />
+            </form>
+        </div>
+
+        <div class="max-w-[1220px] mx-auto flex items-center">
+            <div class="flex items-center sm:gap-4 gap-2 absolute right-5 top-1/2 -translate-y-1/2 text-black">
+
+                @* notification icon *@
+                <button type="button" class="sm:p-2 p-1 rounded-full relative sm:bg-secondery">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6 max-sm:hidden">
+                        <path d="M5.85 3.5a.75.75 0 00-1.117-1 9.719 9.719 0 00-2.348 4.876.75.75 0 001.479.248A8.219 8.219 0 015.85 3.5zM19.267 2.5a.75.75 0 10-1.118 1 8.22 8.22 0 011.987 4.124.75.75 0 001.48-.248A9.72 9.72 0 0019.266 2.5z" />
+                        <path fill-rule="evenodd" d="M12 2.25A6.75 6.75 0 005.25 9v.75a8.217 8.217 0 01-2.119 5.52.75.75 0 00.298 1.206c1.544.57 3.16.99 4.831 1.243a3.75 3.75 0 107.48 0 24.583 24.583 0 004.83-1.244.75.75 0 00.298-1.205 8.217 8.217 0 01-2.118-5.52V9A6.75 6.75 0 0012 2.25zM9.75 18c0-.034 0-.067.002-.1a25.05 25.05 0 004.496 0l.002.1a2.25 2.25 0 11-4.5 0z" clip-rule="evenodd" />
+                    </svg>
+                    <div class="absolute top-0 right-0 -m-1 bg-red-600 text-white text-xs px-1 rounded-full" id="notificationsCount">0</div>
+                </button>
+
+                <div class="hidden bg-white pr-1.5 rounded-lg drop-shadow-xl md:w-[365px] w-screen border2" uk-drop="offset:6;pos: bottom-right; mode: click; animate-out: true;">
+
+                    <div class="flex items-center justify-between gap-2 p-4 pb-2">
+                        <h3 class="font-bold text-xl">Notifications</h3>
+                    </div>
+
+                    <div class="text-sm h-[400px] w-full overflow-y-auto pr-2">
+                        <div class="pl-2 p-1 text-sm font-normal" id="notification-dropdown">
+                            No notifications...
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="rounded-full relative bg-secondery cursor-pointer shrink-0">
+                    <img src="~/images/avatar/user.png" class="sm:w-9 sm:h-9 w-7 h-7 rounded-full shadow shrink-0" />
+                </div>
+                <div class="hidden bg-white rounded-lg drop-shadow-xl w-64 border2" uk-drop="offset:6;pos: bottom-right;animate-out: true;">
+
+                    <a>
+                        <div class="p-4 py-5 flex items-center gap-4">
+                            <img src="~/images/avatar/user.png" class="w-10 h-10 rounded-full shadow" />
+                            <div class="flex-1">
+                                <h4 class="text-sm font-medium text-black">Ervis Trupja</h4>
+                                <div class="text-sm mt-1 text-blue-600 font-light/70">ervistrupja</div>
+                            </div>
+                        </div>
+                    </a>
+                    <hr />
+                    <nav>
+                        <a>
+                            <div class="flex items-center gap-2.5 hover:bg-secondery p-2 px-2.5 rounded-md">
+                                <ion-icon name="settings-outline" class="text-lg"></ion-icon> My Account
+                            </div>
+                        </a>
+                        <hr />
+                        <a>
+                            <div class="flex items-center gap-2.5 hover:bg-secondery p-2 px-2.5 rounded-md">
+                                <ion-icon name="exit-outline" class="text-lg"></ion-icon> Log Out
+
+                            </div>
+                        </a>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
