@@ -1,0 +1,26 @@
+﻿html {
+    font-size: 14px;
+    position: relative;
+    min-height: 100%;
+}
+
+body {
+    margin-bottom: 60px;
+}
+
+form > button.icon-link {
+    padding: 8px 10px;
+    display: flex; /* Enables flexbox */
+    align-items: center; /* Vertically centers the content */
+    text-decoration: none; /* Removes underline from the link */
+    cursor: pointer;
+    border: none; /* Removes default button border */
+    background: none; /* Removes default button background */
+    width: 100%; /* Makes sure the button takes up the full width of the parent */
+    /* Add any additional button styling here */
+}
+
+    form > button.icon-link > ion-icon {
+        margin-right: 8px; /* Adds space between the icon and text */
+    }
+
