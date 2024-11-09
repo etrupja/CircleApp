@@ -72,5 +72,35 @@ namespace CircleApp.Controllers
             //Redirect to the index page
             return RedirectToAction("Index");
         }
+
+
+        [HttpPost]
+        public async Task<IActionResult> TogglePostLike(PostLikeVM postLikeVM)
+        {
+            int loggedInUserId = 1;
+
+            //check if user has already liked the post
+            var like = await _context.Likes
+                .Where(l => l.PostId == postLikeVM.PostId && l.UserId == loggedInUserId)
+                .FirstOrDefaultAsync();
+
+            if(like != null)
+            {
+                _context.Likes.Remove(like);
+                await _context.SaveChangesAsync();
+            }
+            else
+            {
+                var newLike = new Like()
+                {
+                    PostId = postLikeVM.PostId,
+                    UserId = loggedInUserId
+                };
+                await _context.Likes.AddAsync(newLike);
+                await _context.SaveChangesAsync();
+            }
+
+            return RedirectToAction("Index");
+        }
     }
 }
