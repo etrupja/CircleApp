@@ -78,12 +78,13 @@
         <div class="flex items-center gap-2.5">
             <form asp-controller="Home" asp-action="TogglePostLike">
                 <input type="hidden" name="postId" value="@Model.Id" />
-                <button type="submit" class="button-icon text-red-500 bg-red-100">
-                    <ion-icon class="text-lg" name="heart"></ion-icon>
+                <button type="submit" class="button-icon @(Model.Likes.Any(n => n.UserId == 1) ? "text-red-500 bg-red-100" : "")">
+                    <ion-icon class="text-lg" 
+                              name="@(Model.Likes.Any(n => n.UserId == 1) ? "heart" : "heart-outline")"></ion-icon>
                 </button>
             </form>
             
-            <a href="#">24</a>
+            <a href="#">@Model.Likes.Count</a>
         </div>
 
 
