@@ -10,5 +10,6 @@ namespace CircleApp.Data
         }
 
         public DbSet<Post> Posts { get; set; }
+        public DbSet<User> Users { get; set; }
     }
 }
