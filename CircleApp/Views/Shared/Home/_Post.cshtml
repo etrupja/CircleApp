@@ -76,9 +76,13 @@
     <div class="sm:p-4 p-2.5 flex items-center gap-4 text-xs font-semibold">
 
         <div class="flex items-center gap-2.5">
-            <a class="button-icon text-red-500 bg-red-100">
-                <ion-icon class="text-lg" name="heart"></ion-icon>
-            </a>
+            <form asp-controller="Home" asp-action="TogglePostLike">
+                <input type="hidden" name="postId" value="@Model.Id" />
+                <button type="submit" class="button-icon text-red-500 bg-red-100">
+                    <ion-icon class="text-lg" name="heart"></ion-icon>
+                </button>
+            </form>
+            
             <a href="#">24</a>
         </div>
 
