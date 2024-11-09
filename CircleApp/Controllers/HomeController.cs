@@ -22,6 +22,7 @@ namespace CircleApp.Controllers
         {
             var allPosts = await _context.Posts
                 .Include(n => n.User)
+                .OrderByDescending(n => n.DateCreated)
                 .ToListAsync();
 
             return View(allPosts);

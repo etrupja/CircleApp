@@ -1,4 +1,6 @@
-﻿<div class="hidden lg:p-20" id="create-status" uk-modal="">
+﻿@model PostVM
+
+<div class="hidden lg:p-20" id="create-status" uk-modal="">
 
     <div class="uk-modal-dialog tt relative overflow-hidden mx-auto bg-white shadow-xl rounded-lg md:w-[520px] w-full">
         <div class="text-center py-4 border-b mb-0">
@@ -10,10 +12,11 @@
             </button>
         </div>
 
-        <form>
+        <form asp-controller="Home" asp-action="CreatePost">
             <div class="space-y-5 mt-3 p-2">
                 <textarea class="w-full !text-black placeholder:!text-black !bg-white !border-transparent focus:!border-transparent focus:!ring-transparent !font-normal !text-xl"
                 name="content"
+                asp-for="@Model.Content"
                 rows="2"
                 placeholder="What do you have in mind?"></textarea>
             </div>
