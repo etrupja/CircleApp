@@ -48,7 +48,7 @@ namespace CircleApp.Controllers
             };
 
             //Check and save the image
-            if(post.Image != null && post.Image.Length > 0)
+            if (post.Image != null && post.Image.Length > 0)
             {
                 string rootFolderPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot");
                 if (post.Image.ContentType.Contains("image"))
@@ -59,7 +59,7 @@ namespace CircleApp.Controllers
                     string fileName = Guid.NewGuid().ToString() + Path.GetExtension(post.Image.FileName);
                     string filePath = Path.Combine(rootFolderPathImages, fileName);
 
-                    using(var stream = new FileStream(filePath, FileMode.Create))
+                    using (var stream = new FileStream(filePath, FileMode.Create))
                         await post.Image.CopyToAsync(stream);
 
                     //Set the URL to the newPost object
@@ -86,7 +86,7 @@ namespace CircleApp.Controllers
                 .Where(l => l.PostId == postLikeVM.PostId && l.UserId == loggedInUserId)
                 .FirstOrDefaultAsync();
 
-            if(like != null)
+            if (like != null)
             {
                 _context.Likes.Remove(like);
                 await _context.SaveChangesAsync();
@@ -121,6 +121,20 @@ namespace CircleApp.Controllers
             };
             await _context.Comments.AddAsync(newComment);
             await _context.SaveChangesAsync();
+
+            return RedirectToAction("Index");
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> RemovePostComment(RemoveCommentVM removeCommentVM)
+        {
+            var commentDb = await _context.Comments.FirstOrDefaultAsync(c => c.Id == removeCommentVM.CommentId);
+
+            if (commentDb != null)
+            {
+                _context.Comments.Remove(commentDb);
+                await _context.SaveChangesAsync();
+            }
 
             return RedirectToAction("Index");
         }
