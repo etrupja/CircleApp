@@ -12,8 +12,8 @@
 
         <!-- Modal Footer-->
         <div class="flex justify-end p-6 text-sm font-medium">
-            <form asp-controller="Home" asp-action="PostDelete">
-                <input type="hidden" name="postId" id="postId" value="" />
+            <form asp-controller="Home" asp-action="PostRemove">
+                <input type="hidden" name="postId" id="deleteConfirmationPostId" value="" />
                 <button type="button" class="px-4 py-1.5 rounded-md uk-modal-close">Cancel</button>
                 <button type="submit" class="px-5 py-1.5 bg-gray-100 rounded-md">Delete</button>
             </form>
