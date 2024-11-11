@@ -8,7 +8,7 @@ body {
     margin-bottom: 60px;
 }
 
-form > button.icon-link {
+form > button.icon-link, button.delete-post-btn {
     padding: 8px 10px;
     display: flex; /* Enables flexbox */
     align-items: center; /* Vertically centers the content */
@@ -20,7 +20,7 @@ form > button.icon-link {
     /* Add any additional button styling here */
 }
 
-    form > button.icon-link > ion-icon {
+    form > button.icon-link > ion-icon, button.delete-post-btn > ion-icon {
         margin-right: 8px; /* Adds space between the icon and text */
     }
 

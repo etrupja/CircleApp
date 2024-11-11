@@ -33,7 +33,7 @@
 
         <div class="-mr-1">
             <button type="button" class="button-icon w-8 h-8"> <ion-icon class="text-xl" name="ellipsis-horizontal"></ion-icon> </button>
-            <div class="w-[245px]" uk-dropdown="pos: bottom-right; animation: uk-animation-scale-up uk-transform-origin-top-right; animate-out: true; mode: click">
+            <div class="w-[245px] post-options-dropdown" uk-dropdown="pos: bottom-right; animation: uk-animation-scale-up uk-transform-origin-top-right; animate-out: true; mode: click">
 
                 @if (Model.UserId == 1)
                 {
@@ -45,12 +45,9 @@
                     </form>
                     <hr>
 
-                    <form asp-controller="Home" asp-action="Delete">
-                        <input type="hidden" name="postId" />
-                        <button type="submit" class="text-red-400 hover:!bg-red-50 icon-link">
-                            <ion-icon name="trash-bin-outline"></ion-icon>  Delete Post
-                        </button>
-                    </form>
+                    <button type="button" onclick="openPostDeleteConfirmation('@Model.Id')" class="text-red-400 hover:!bg-red-50 delete-post-btn">
+                        <ion-icon name="trash-bin-outline"></ion-icon>  Delete Post
+                    </button>
                 }
                 
                 @if(!isReported)
@@ -199,3 +196,15 @@
         </form>
     </div>
 </div>
+
+<partial name="Home/_PostDeleteConfirmation" />
+
+<script>
+    function openPostDeleteConfirmation(postId) {
+
+        console.log('Selected post id - ', postId);
+        UIkit.dropdown('.post-options-dropdown').hide();
+        document.getElementById('postId').value = postId;
+        UIkit.modal('#postDeleteDialog').show();
+    }
+</script>
