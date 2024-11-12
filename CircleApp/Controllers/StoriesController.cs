@@ -2,6 +2,7 @@
 using CircleApp.Data.Models;
 using CircleApp.ViewModels.Stories;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace CircleApp.Controllers
 {
@@ -15,7 +16,8 @@ namespace CircleApp.Controllers
 
         public async Task<IActionResult> Index()
         {
-            return View();
+            var allStories = await _context.Stories.Include(s => s.User).ToListAsync();
+            return View(allStories);
         }
 
         [HttpPost]
