@@ -243,11 +243,27 @@ namespace CircleApp.Controllers
         {
             var postDb = await _context.Posts.FirstOrDefaultAsync(c => c.Id == postRemoveVM.PostId);
 
-            if(postDb != null)
+            if (postDb != null)
             {
                 postDb.IsDeleted = true;
                 _context.Posts.Update(postDb);
                 await _context.SaveChangesAsync();
+
+
+                //Update hashtags
+                var postHashtags = HashtagHelper.GetHashtags(postDb.Content);
+                foreach (var hashtag in postHashtags)
+                {
+                    var hashtagDb = await _context.Hashtags.FirstOrDefaultAsync(n => n.Name == hashtag);
+                    if (hashtagDb != null)
+                    {
+                        hashtagDb.Count -= 1;
+                        hashtagDb.DateUpdated = DateTime.UtcNow;
+
+                        _context.Hashtags.Update(hashtagDb);
+                        await _context.SaveChangesAsync();
+                    }
+                }
             }
 
             return RedirectToAction("Index");
