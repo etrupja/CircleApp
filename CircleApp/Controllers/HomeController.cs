@@ -12,14 +12,16 @@ namespace CircleApp.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
-        private readonly AppDbContext _context;
         private readonly IPostsService _postsService;
+        private readonly IHashtagsService _hashtagsService;
 
-        public HomeController(ILogger<HomeController> logger, AppDbContext context, IPostsService postsService)
+        public HomeController(ILogger<HomeController> logger, 
+            IPostsService postsService,
+            IHashtagsService hashtagsService)
         {
             _logger = logger;
-            _context = context;
             _postsService = postsService;
+            _hashtagsService = hashtagsService;
         }
 
         public async Task<IActionResult> Index()
@@ -48,33 +50,7 @@ namespace CircleApp.Controllers
             };
 
             await _postsService.CreatePostAsync(newPost, post.Image);
-
-
-            //Find and store hashtags
-            var postHashtags = HashtagHelper.GetHashtags(post.Content);
-            foreach (var hashTag in postHashtags) 
-            {
-                var hashtagDb = await _context.Hashtags.FirstOrDefaultAsync(n => n.Name == hashTag);
-                if(hashtagDb != null)
-                {
-                    hashtagDb.Count += 1;
-                    hashtagDb.DateUpdated = DateTime.UtcNow;
-
-                    _context.Hashtags.Update(hashtagDb);
-                    await _context.SaveChangesAsync();
-                } else
-                {
-                    var newHashtag = new Hashtag()
-                    {
-                        Name = hashTag,
-                        Count = 1,
-                        DateCreated = DateTime.UtcNow,
-                        DateUpdated = DateTime.UtcNow
-                    };
-                    await _context.Hashtags.AddAsync(newHashtag);
-                    await _context.SaveChangesAsync();
-                }
-            }
+            await _hashtagsService.ProcessHashtagsForNewPostAsync(post.Content);
 
             //Redirect to the index page
             return RedirectToAction("Index");
@@ -150,22 +126,8 @@ namespace CircleApp.Controllers
         public async Task<IActionResult> PostRemove(PostRemoveVM postRemoveVM)
         {
 
-            await _postsService.RemovePostAsync(postRemoveVM.PostId);
-           
-                //Update hashtags
-                //var postHashtags = HashtagHelper.GetHashtags(postDb.Content);
-                //foreach (var hashtag in postHashtags)
-                //{
-                //    var hashtagDb = await _context.Hashtags.FirstOrDefaultAsync(n => n.Name == hashtag);
-                //    if (hashtagDb != null)
-                //    {
-                //        hashtagDb.Count -= 1;
-                //        hashtagDb.DateUpdated = DateTime.UtcNow;
-
-                //        _context.Hashtags.Update(hashtagDb);
-                //        await _context.SaveChangesAsync();
-                //    }
-                //}
+            var postRemoved = await _postsService.RemovePostAsync(postRemoveVM.PostId);
+            await _hashtagsService.ProcessHashtagsForRemovedPostAsync(postRemoved.Content);
 
             return RedirectToAction("Index");
         }
