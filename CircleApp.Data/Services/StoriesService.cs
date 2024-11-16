@@ -28,27 +28,8 @@ namespace CircleApp.Data.Services
             return allStories;
         }
 
-        public async Task<Story> CreateStoryAsync(Story story, IFormFile image)
+        public async Task<Story> CreateStoryAsync(Story story)
         {
-            if (image != null && image.Length > 0)
-            {
-                string rootFolderPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot");
-                if (image.ContentType.Contains("image"))
-                {
-                    string rootFolderPathImages = Path.Combine(rootFolderPath, "images/stories");
-                    Directory.CreateDirectory(rootFolderPathImages);
-
-                    string fileName = Guid.NewGuid().ToString() + Path.GetExtension(image.FileName);
-                    string filePath = Path.Combine(rootFolderPathImages, fileName);
-
-                    using (var stream = new FileStream(filePath, FileMode.Create))
-                        await image.CopyToAsync(stream);
-
-                    //Set the URL to the newPost object
-                    story.ImageUrl = "/images/stories/" + fileName;
-                }
-            }
-
             await _context.Stories.AddAsync(story);
             await _context.SaveChangesAsync();
 

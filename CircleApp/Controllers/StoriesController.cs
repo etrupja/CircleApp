@@ -1,4 +1,5 @@
 ﻿using CircleApp.Data;
+using CircleApp.Data.Helpers.Enums;
 using CircleApp.Data.Models;
 using CircleApp.Data.Services;
 using CircleApp.ViewModels.Stories;
@@ -10,9 +11,12 @@ namespace CircleApp.Controllers
     public class StoriesController : Controller
     {
         private readonly IStoriesService _storiesService;
-        public StoriesController(IStoriesService storiesService) 
+        private readonly IFilesService _filesService;
+        public StoriesController(IStoriesService storiesService,
+            IFilesService filesService) 
         {
             _storiesService = storiesService;
+            _filesService = filesService;
         }
 
         [HttpPost]
@@ -20,14 +24,17 @@ namespace CircleApp.Controllers
         {
             int loggedInUserId = 1;
 
+            var imageUploadPath = await _filesService.UploadImageAsync(storyVM.Image, ImageFileType.StoryImage);
+
             var newStory = new Story
             {
                 DateCreated = DateTime.UtcNow,
                 IsDeleted = false,
+                ImageUrl = imageUploadPath,
                 UserId = loggedInUserId
             };
 
-            await _storiesService.CreateStoryAsync(newStory, storyVM.Image);
+            await _storiesService.CreateStoryAsync(newStory);
 
             return RedirectToAction("Index", "Home");
         }
