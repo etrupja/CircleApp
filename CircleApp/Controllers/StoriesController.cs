@@ -1,5 +1,6 @@
 ﻿using CircleApp.Data;
 using CircleApp.Data.Models;
+using CircleApp.Data.Services;
 using CircleApp.ViewModels.Stories;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -8,10 +9,10 @@ namespace CircleApp.Controllers
 {
     public class StoriesController : Controller
     {
-        private readonly AppDbContext _context;
-        public StoriesController(AppDbContext context) 
+        private readonly IStoriesService _storiesService;
+        public StoriesController(IStoriesService storiesService) 
         {
-            _context = context;
+            _storiesService = storiesService;
         }
 
         [HttpPost]
@@ -26,28 +27,7 @@ namespace CircleApp.Controllers
                 UserId = loggedInUserId
             };
 
-            //Check and save the image
-            if (storyVM.Image != null && storyVM.Image.Length > 0)
-            {
-                string rootFolderPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot");
-                if (storyVM.Image.ContentType.Contains("image"))
-                {
-                    string rootFolderPathImages = Path.Combine(rootFolderPath, "images/stories");
-                    Directory.CreateDirectory(rootFolderPathImages);
-
-                    string fileName = Guid.NewGuid().ToString() + Path.GetExtension(storyVM.Image.FileName);
-                    string filePath = Path.Combine(rootFolderPathImages, fileName);
-
-                    using (var stream = new FileStream(filePath, FileMode.Create))
-                        await storyVM.Image.CopyToAsync(stream);
-
-                    //Set the URL to the newPost object
-                    newStory.ImageUrl = "/images/stories/" + fileName;
-                }
-            }
-
-            await _context.Stories.AddAsync(newStory);
-            await _context.SaveChangesAsync();
+            await _storiesService.CreateStoryAsync(newStory, storyVM.Image);
 
             return RedirectToAction("Index", "Home");
         }
