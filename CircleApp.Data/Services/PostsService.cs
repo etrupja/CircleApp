@@ -32,6 +32,24 @@ namespace CircleApp.Data.Services
             return allPosts;
         }
 
+        public async Task<List<Post>> GetAllFavoritedPostsAsync(int loggedInUserId)
+        {
+            var allFavoritedPosts = await _context.Favorites
+                .Include(f => f.Post.Reports)
+                    .Where(n => n.UserId == loggedInUserId && 
+                    !n.Post.IsDeleted && 
+                    n.Post.Reports.Count < 5)
+                .Include(n => n.Post)
+                .Select(n => n.Post)
+                    .Include(p => p.User)
+                    .Include(p => p.Comments)
+                        .ThenInclude(c => c.User)
+                    .Include(p => p.Likes)
+                .ToListAsync();
+
+            return allFavoritedPosts;
+        }
+
         public async Task AddPostCommentAsync(Comment comment)
         {
             await _context.Comments.AddAsync(comment);
