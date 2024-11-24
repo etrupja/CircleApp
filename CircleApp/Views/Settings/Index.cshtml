@@ -8,9 +8,9 @@
             @* profile picture section *@
             <div class="flex items-center justify-between p-6 pb-4">
 
-                <form id="updateProfilePictureForm" class="flex items-center gap-4 w-full">
+                <form id="updateProfilePictureForm" class="flex items-center gap-4 w-full" asp-controller="Settings" asp-action="UpdateProfilePicture" enctype="multipart/form-data">
                     <div class="relative w-12 h-12 shrink-0">
-                        <label class="cursor-pointer">
+                        <label for="imageUpload" class="cursor-pointer">
                             <img id="imagePreview" src="@(Model.ProfilePictureUrl ?? "~/images/avatar/user.png")" class="object-cover w-full h-full rounded-full" alt="Profile Picture Placeholder" />
                             <input type="file" id="imageUpload" name="ProfilePictureImage" class="hidden" accept="image/png, image/jpeg" />
                         </label>
@@ -30,7 +30,6 @@
 
                 </form>
                 </div>
-
 
             <div class="relative border-b">
                 <nav class="nav__underline px-6 p-0 border-transparent -mb-px">
@@ -109,3 +108,26 @@
             </div>
         </div>
 </main>
+
+<script>
+
+    const imageUpload = document.getElementById('imageUpload');
+    const imagePreview = document.getElementById('imagePreview');
+    const saveButton = document.getElementById('saveButton');
+
+    imageUpload.addEventListener('change', (event) => {
+        const file = event.target.files[0];
+
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                imagePreview.src = e.target.result;
+                saveButton.classList.remove('hidden');
+            }
+            reader.readAsDataURL(file);
+        } else {
+            saveButton.classList.add('hidden');
+        }
+    });
+
+</script>
