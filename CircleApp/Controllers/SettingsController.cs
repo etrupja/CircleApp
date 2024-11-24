@@ -1,4 +1,5 @@
 ﻿using CircleApp.Data.Services;
+using CircleApp.ViewModels.Settings;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CircleApp.Controllers
@@ -6,9 +7,11 @@ namespace CircleApp.Controllers
     public class SettingsController : Controller
     {
         private readonly IUsersService _usersService;
-        public SettingsController(IUsersService usersService) 
+        private readonly IFilesService _filesService;
+        public SettingsController(IUsersService usersService, IFilesService filesService) 
         {
             _usersService = usersService;
+            _filesService = filesService;
         }
 
         public async Task<IActionResult> Index()
@@ -16,6 +19,17 @@ namespace CircleApp.Controllers
             var loggedInUserId = 1;
             var userDb = await _usersService.GetUser(loggedInUserId);
             return View(userDb);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> UpdateProfilePicture(ProfilePictureVM profilePictureVM)
+        {
+            var loggedInUser = 1;
+            var uploadedProfilePictureUrl = await _filesService.UploadImageAsync(profilePictureVM.ProfilePictureImage, Data.Helpers.Enums.ImageFileType.ProfilePicture);
+
+            await _usersService.UpdateUserProfilePicture(loggedInUser, uploadedProfilePictureUrl);
+
+            return RedirectToAction("Index");
         }
     }
 }
