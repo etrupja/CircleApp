@@ -2,6 +2,36 @@
 
 <main id="site__main" class="2xl:ml-[--w-side]  xl:ml-[--w-side-sm] p-2.5 h-[calc(100vh-var(--m-top))] mt-[--m-top]">
 
-    <h2>Welcome to settings</h2>
+    <div class="max-w-3xl mx-auto">
+        <div class="box relative rounded-lg shadow-md">
 
-    </main>
+            @* profile picture section *@
+            <div class="flex items-center justify-between p-6 pb-4">
+
+                <form id="updateProfilePictureForm" class="flex items-center gap-4 w-full">
+                    <div class="relative w-12 h-12 shrink-0">
+                        <label class="cursor-pointer">
+                            <img id="imagePreview" src="@(Model.ProfilePictureUrl ?? "~/images/avatar/user.png")" class="object-cover w-full h-full rounded-full" alt="Profile Picture Placeholder" />
+                            <input type="file" id="imageUpload" name="ProfilePictureImage" class="hidden" accept="image/png, image/jpeg" />
+                        </label>
+
+                        <label for="imageUpload" class="p-0.5 rounded-full bg-slate-600 border-white absolute -bottom-2 -right-2 cursor-pointer">
+                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-3 h-3 fill-white">
+                                <path d="M12 9a3.75 3.75 0 100 7.5A3.75 3.75 0 0012 9z" />
+                                <path fill-rule="evenodd" d="M9.344 3.071a49.52 49.52 0 015.312 0c.967.052 1.83.585 2.332 1.39l.821 1.317c.24.383.645.643 1.11.71.386.054.77.113 1.152.177 1.432.239 2.429 1.493 2.429 2.909V18a3 3 0 01-3 3h-15a3 3 0 01-3-3V9.574c0-1.416.997-2.67 2.429-2.909.382-.064.766-.123 1.151-.178a1.56 1.56 0 001.11-.71l.822-1.315a2.942 2.942 0 012.332-1.39zM6.75 12.75a5.25 5.25 0 1110.5 0 5.25 5.25 0 01-10.5 0zm12-1.5a.75.75 0 100-1.5.75.75 0 000 1.5z" clip-rule="evenodd" />
+                            </svg>
+                        </label>
+                    </div>
+                    <div>
+                        <h3 class="text-base font-semibold text-black">@Model.FullName</h3>
+                        <p class="text-sm text-blue-600 mt-1 font-normal">@@ervistrupja </p>
+                    </div>
+                    <button type="submit" id="saveButton" class="hidden button bg-blue-500 text-white px-4 py-1 rounded ml-auto">Save</button>
+
+                </form>
+                </div>
+                @* tabs *@
+
+            </div>
+        </div>
+</main>
