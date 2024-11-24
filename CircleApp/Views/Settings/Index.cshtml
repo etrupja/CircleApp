@@ -81,30 +81,32 @@
                     </form>
                 </div>
                 <div>
-                    <div class="space-y-6">
-                        <div class="flex items-center gap-10">
-                            <label class="w-32 text-right">Current password</label>
-                            <div class="flex-1">
-                                <input type="password" name="currentPassword" placeholder="Enter your current password" class="w-full" />
+                    <form asp-controller="Settings" asp-action="UpdatePassword">
+                        <div class="space-y-6">
+                            <div class="flex items-center gap-10">
+                                <label class="w-32 text-right">Current password</label>
+                                <div class="flex-1">
+                                    <input type="password" name="currentPassword" placeholder="Enter your current password" class="w-full" />
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-10">
+                                <label class="w-32 text-right">New password</label>
+                                <div class="flex-1">
+                                    <input type="password" name="newPassword" placeholder="Enter your new password" value="" class="w-full" />
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-10">
+                                <label class="w-32 text-right">Confirm password</label>
+                                <div class="flex-1">
+                                    <input type="password" name="confirmPassword" placeholder="Confirm your new password" value="" class="w-full" />
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-4 mt-16 pl-[10.5rem]">
+                                <button class="button px-6 bg-secondary">Cancel</button>
+                                <button type="submit" class="button px-10 bg-primary text-white">Save</button>
                             </div>
                         </div>
-                        <div class="flex items-center gap-10">
-                            <label class="w-32 text-right">New password</label>
-                            <div class="flex-1">
-                                <input type="password" name="newPassword" placeholder="Enter your new password" value="" class="w-full" />
-                            </div>
-                        </div>
-                        <div class="flex items-center gap-10">
-                            <label class="w-32 text-right">Confirm password</label>
-                            <div class="flex-1">
-                                <input type="password" name="confirmPassword" placeholder="Confirm your new password" value="" class="w-full" />
-                            </div>
-                        </div>
-                        <div class="flex items-center gap-4 mt-16 pl-[10.5rem]">
-                            <button class="button px-6 bg-secondary">Cancel</button>
-                            <button type="submit" class="button px-10 bg-primary text-white">Save</button>
-                        </div>
-                    </div>
+                    </form>
                 </div>
             </div>
             </div>

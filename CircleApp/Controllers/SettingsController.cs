@@ -22,7 +22,7 @@ namespace CircleApp.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> UpdateProfilePicture(ProfilePictureVM profilePictureVM)
+        public async Task<IActionResult> UpdateProfilePicture(UpdateProfilePictureVM profilePictureVM)
         {
             var loggedInUser = 1;
             var uploadedProfilePictureUrl = await _filesService.UploadImageAsync(profilePictureVM.ProfilePictureImage, Data.Helpers.Enums.ImageFileType.ProfilePicture);
@@ -33,7 +33,13 @@ namespace CircleApp.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> UpdateProfile(ProfileVM profileVM)
+        public async Task<IActionResult> UpdateProfile(UpdateProfileVM profileVM)
+        {
+            return RedirectToAction("Index");
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> UpdatePassword(UpdatePasswordVM updatePasswordVM)
         {
             return RedirectToAction("Index");
         }
