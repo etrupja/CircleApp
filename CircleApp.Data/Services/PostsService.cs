@@ -24,12 +24,25 @@ namespace CircleApp.Data.Services
                 .Include(n => n.User)
                 .Include(n => n.Likes)
                 .Include(n => n.Favorites)
-                .Include(n => n.Comments).ThenInclude(n => n.User)
+                .Include(n => n.Comments.OrderByDescending(c => c.DateCreated).Take(3)).ThenInclude(n => n.User)
                 .Include(n => n.Reports)
                 .OrderByDescending(n => n.DateCreated)
                 .ToListAsync();
 
             return allPosts;
+        }
+
+        public async Task<Post> GetPostByIdAsync(int postId)
+        {
+            var post = await _context.Posts
+                .Include(n => n.User)
+                .Include(n => n.Likes)
+                .Include(n => n.Favorites)
+                .Include(n => n.Comments).ThenInclude(n => n.User)
+                .Include(n => n.Reports)
+                .FirstOrDefaultAsync(n => n.Id == postId);
+
+            return post ?? new Post();
         }
 
         public async Task<List<Post>> GetAllFavoritedPostsAsync(int loggedInUserId)

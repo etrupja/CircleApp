@@ -1,0 +1,11 @@
+﻿@model Post
+
+<main id="site__main" class="2xl:ml-[--w-side] xl:ml-[--w-side-sm] h-[calc(100vh-var(--m-top))] mt-[--m-top]">
+    <div class="w-full h-full" id="js-oversized">
+        <div class="h-full w-full">
+            <div class="w-full h-full">
+                <partial name="Home/_Post" model="@Model" view-data='new ViewDataDictionary(ViewData) { { "ShowAllComments", true } }' />
+            </div>
+        </div>
+    </div>
+</main>

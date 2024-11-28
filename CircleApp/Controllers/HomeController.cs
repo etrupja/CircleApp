@@ -137,5 +137,12 @@ namespace CircleApp.Controllers
 
             return RedirectToAction("Index");
         }
+
+
+        public async Task<IActionResult> PostDetails(int postId)
+        {
+            var postDb = await _postsService.GetPostByIdAsync(postId);
+            return View(postDb);
+        }
     }
 }

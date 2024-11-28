@@ -15,6 +15,8 @@
     bool isLiked = Model.Likes.Any(n => n.UserId == 1);
     bool isPrivate = Model.IsPrivate == true && Model.UserId == 1;
     bool isReported = Model.Reports.Any(n => n.UserId == 1);
+
+    bool showAllComments = ViewData["ShowAllComments"] as bool? ?? false;
 }
 
 <div class="bg-white rounded-xl shadow-sm text-sm font-medium border1">
@@ -22,7 +24,7 @@
     @* Post heading *@
     <div class="flex gap-3 sm:p-4 p-2.5 text-sm font-medium">
         <a>
-            <img src="@(Model.User.ProfilePictureUrl ?? "~/images/avatar/user.png")" class="w-9 h-9 rounded-full" />
+            <img src="@(!string.IsNullOrEmpty(Model.User.ProfilePictureUrl) ? @Url.Content("~/" + Model.User.ProfilePictureUrl) : "~/images/avatar/user.png")" class="w-9 h-9 rounded-full" />
         </a>
         <div class="flex-1">
             <a>
@@ -49,8 +51,8 @@
                         <ion-icon name="trash-bin-outline"></ion-icon>  Delete Post
                     </button>
                 }
-                
-                @if(!isReported)
+
+                @if (!isReported)
                 {
                     <form asp-controller="Home" asp-action="AddPostReport">
                         <input type="hidden" name="postId" value="@Model.Id" />
@@ -65,7 +67,7 @@
     </div>
 
     @* Post content *@
-    <a>
+    <a asp-controller="Home" asp-action="PostDetails" asp-route-postId="@Model.Id">
         <div class="sm:px-4 p-2.5 pt-0 w-full">
             <p class="font-normal">
                 @Model.Content
@@ -75,9 +77,17 @@
 
     @if (!string.IsNullOrEmpty(Model.ImageUrl))
     {
-        <a>
+        @*<a>
             <div class="relative w-full lg:h-96 h-full sm:px-4">
-                <img src="@Model.ImageUrl" class="sm:rounded-lg w-full h-full object-cover" />
+                <img src="@Url.Content("~/" + Model.ImageUrl)" class="sm:rounded-lg w-full h-full object-cover" />
+            </div>
+        </a>*@
+
+        <a>
+            <div class="w-full sm:px-4 mb-4">
+                <div class="w-full">
+                    <img src="@Url.Content("~/" + Model.ImageUrl)" class="w-full max-w-full sm:rounded-lg object-contain" alt="Post image" />
+                </div>
             </div>
         </a>
     }
@@ -90,11 +100,11 @@
             <form asp-controller="Home" asp-action="TogglePostLike">
                 <input type="hidden" name="postId" value="@Model.Id" />
                 <button type="submit" class="button-icon @(isLiked ? "text-red-500 bg-red-100" : "")">
-                    <ion-icon class="text-lg" 
+                    <ion-icon class="text-lg"
                               name="@(isLiked ? "heart" : "heart-outline")"></ion-icon>
                 </button>
             </form>
-            
+
             <a href="#">@Model.Likes.Count</a>
         </div>
 
@@ -126,9 +136,9 @@
     @* Add comment section *@
     <div>
 
-        <div  class="p-2.5 border-t border-gray-100 font-normal space-y-3 relative">
+        <div class="p-2.5 border-t border-gray-100 font-normal space-y-3 relative">
 
-            @foreach(var comment in Model.Comments.OrderByDescending(n => n.DateCreated).Take(3))
+            @foreach (var comment in Model.Comments.OrderByDescending(n => n.DateCreated))
             {
                 TimeSpan commentTimeSpanSincePosted = DateTime.UtcNow.Subtract(comment.DateCreated);
 
@@ -142,7 +152,7 @@
 
                 <div class="flex items-start gap-3 relative">
                     <a>
-                        <img src="@(comment.User.ProfilePictureUrl ?? "~/images/avatar/user.png")" class="w-6 h-6 mt-1 rounded-full" />
+                        <img src="@(!string.IsNullOrEmpty(comment.User.ProfilePictureUrl) ? Url.Content("~/" + comment.User.ProfilePictureUrl) : "~/images/avatar/user.png")" class="w-6 h-6 mt-1 rounded-full" />
                     </a>
                     <div class="flex-1">
                         <div class="flex justify-content-between">
@@ -157,18 +167,18 @@
                             </p>
 
                             <form asp-controller="Home" asp-action="RemovePostComment">
-                                <input type="hidden"  name="commentId" value="@comment.Id"/>
+                                <input type="hidden" name="commentId" value="@comment.Id" />
                                 <button type="submit" class="text-red-500 text-xs ml-2" title="Remove post comment">
                                     <ion-icon name="trash-outline"></ion-icon>
                                 </button>
                             </form>
                         </div>
-                        
+
                     </div>
                 </div>
             }
 
-            @if(Model.Comments.Count >= 3)
+            @if (Model.Comments.Count >= 3 && !showAllComments)
             {
                 <div class="p-1.5">
                     <a>
