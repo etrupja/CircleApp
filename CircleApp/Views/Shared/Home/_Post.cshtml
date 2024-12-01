@@ -23,7 +23,7 @@
 
     @* Post heading *@
     <div class="flex gap-3 sm:p-4 p-2.5 text-sm font-medium">
-        <a>
+        <a asp-controller="Timelines" asp-action="Index" asp-route-loggedInUserId="@Model.UserId">
             <img src="@(!string.IsNullOrEmpty(Model.User.ProfilePictureUrl) ? @Url.Content("~/" + Model.User.ProfilePictureUrl) : "~/images/avatar/user.png")" class="w-9 h-9 rounded-full" />
         </a>
         <div class="flex-1">
@@ -151,7 +151,7 @@
                 };
 
                 <div class="flex items-start gap-3 relative">
-                    <a>
+                    <a asp-controller="Timelines" asp-action="Index" asp-route-loggedInUserId="@Model.UserId">
                         <img src="@(!string.IsNullOrEmpty(comment.User.ProfilePictureUrl) ? Url.Content("~/" + comment.User.ProfilePictureUrl) : "~/images/avatar/user.png")" class="w-6 h-6 mt-1 rounded-full" />
                     </a>
                     <div class="flex-1">

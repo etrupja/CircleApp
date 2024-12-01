@@ -32,6 +32,21 @@ namespace CircleApp.Data.Services
             return allPosts;
         }
 
+        public async Task<List<Post>> GetAllTimelinePostsAsync(int loggedInUserId)
+        {
+            var allPosts = await _context.Posts
+                .Where(n => n.UserId == loggedInUserId && n.Reports.Count < 5 && !n.IsDeleted)
+                .Include(n => n.User)
+                .Include(n => n.Likes)
+                .Include(n => n.Favorites)
+                .Include(n => n.Comments.OrderByDescending(c => c.DateCreated).Take(3)).ThenInclude(n => n.User)
+                .Include(n => n.Reports)
+                .OrderByDescending(n => n.DateCreated)
+                .ToListAsync();
+
+            return allPosts;
+        }
+
         public async Task<Post> GetPostByIdAsync(int postId)
         {
             var post = await _context.Posts
