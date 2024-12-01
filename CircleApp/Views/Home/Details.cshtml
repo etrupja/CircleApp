@@ -4,9 +4,7 @@
 <main id="site__main" class="2xl:ml-[--w-side]  xl:ml-[--w-side-sm] p-2.5 h-[calc(100vh-var(--m-top))] mt-[--m-top]">
     <div class="w-full h-full" id="js-oversized">
         <div class="w-full h-full">
-            @*<div class="w-full h-full">*@
-            <partial name="Home/_Post" model="Model" />
-            @*</div>*@
+            <partial name="Home/_Post" model="Model" view-data='new ViewDataDictionary(ViewData) { { "ShowAllComment", true } }' />
         </div>
     </div>
 </main>
