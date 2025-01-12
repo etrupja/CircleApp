@@ -1,6 +1,7 @@
 
 using CircleApp.Data;
 using CircleApp.Data.Helpers;
+using CircleApp.Data.Models;
 using CircleApp.Data.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -23,7 +24,7 @@ builder.Services.AddScoped<IUsersService, UsersService>();
 
 
 //Identity configuration
-builder.Services.AddIdentity<IdentityUser, IdentityRole>()
+builder.Services.AddIdentity<User, IdentityRole<int>>()
     .AddEntityFrameworkStores<AppDbContext>()
     .AddDefaultTokenProviders();
 
