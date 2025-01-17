@@ -1,0 +1,41 @@
+﻿@model List<Story>
+
+<main id="site__main" class="2xl:ml-[--w-side]  xl:ml-[--w-side-sm] p-2.5 h-[calc(100vh-var(--m-top))] mt-[--m-top]">
+    <div class="lg:flex 2xl:gap-16 gap-12 max-w-[1065px] mx-auto" id="js-oversized">
+        <div class="max-w-[680px] mx-auto">
+            @* stories *@
+            <div class="mb-8">
+                <h3 class="font-extrabold text-2xl  text-black hidden">Stories</h3>
+
+                <div class="relative" tabindex="-1" uk-slider="auto play: true;finite: true" uk-lightbox="">
+                    <div class="py-5 uk-slider-container">
+                        <ul class="uk-slider-items w-[calc(100%+14px)]" uk-scrollspy="target: > li; cls: uk-animation-scale-up; delay: 20;repeat:true">
+
+                            <li class="md:pr-3" uk-scrollspy-class="uk-animation-fade">
+                                <div class="md:w-16 md:h-16 w-12 h-12 rounded-full relative border-2 border-dashed grid place-items-center bg-slate-200 border-slate-300 shrink-0"
+                                     uk-toggle="target: #create-story">
+                                    <ion-icon name="camera" class="text-2xl"></ion-icon>
+                                </div>
+                            </li>
+
+                            @foreach (var story in Model)
+                            {
+                                <li class="md:pr-3 pr-2 hover:scale-[1.15] hover:-rotate-2 duration-300">
+                                    <a href="@story.ImageUrl">
+                                        <div class="md:w-16 md:h-16 w-12 h-12 relative md:border-4 border-2 shadow border-white rounded-full overflow-hidden">
+                                            <img src="@story.User.ProfilePictureUrl" />
+                                        </div>
+                                    </a>
+                                </li>
+                            }
+
+                            <li class="md:pr-3 pr-2">
+                                <div class="md:w-16 md:h-16 w-12 h-12 bg-slate-200/60 rounded-full animate-pulse"></div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>

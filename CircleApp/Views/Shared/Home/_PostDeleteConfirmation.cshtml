@@ -1,0 +1,30 @@
+﻿<div id="postDeleteDialog" uk-modal>
+    <div class="uk-modal-dialog relative mx-auto bg-white rounded-lg shadow-xl w-[400px]">
+        <!-- Modal Header -->
+        <div class="p-6">
+            <h2 class="text-xl font-semibold">Confirm Delete</h2>
+        </div>
+
+        <!-- Modal Body -->
+        <div class="p-6 py-0">
+            <p>Are you sure you want to delete this post?</p>
+        </div>
+
+        <!-- Modal Footer-->
+        <div class="flex justify-end p-6 text-sm font-medium">
+            <form asp-controller="Home" asp-action="PostRemove">
+                <input type="hidden" name="postId" id="deleteConfirmationPostId" value="" />
+                <button type="button" class="px-4 py-1.5 rounded-md uk-modal-close">Cancel</button>
+                <button type="submit" class="px-5 py-1.5 bg-gray-100 rounded-md">Delete</button>
+            </form>
+        </div>
+
+        <!-- Close Button -->
+        <button type="button" class="bg-white rounded-full p-2 absolute right-0 top-0 m-3 uk-modal-close">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+        </button>
+
+    </div>
+</div>

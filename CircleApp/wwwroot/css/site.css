@@ -1,22 +1,26 @@
-html {
-  font-size: 14px;
-}
-
-@media (min-width: 768px) {
-  html {
-    font-size: 16px;
-  }
-}
-
-.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
-  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
-}
-
-html {
-  position: relative;
-  min-height: 100%;
+﻿html {
+    font-size: 14px;
+    position: relative;
+    min-height: 100%;
 }
 
 body {
-  margin-bottom: 60px;
+    margin-bottom: 60px;
 }
+
+form > button.icon-link, button.delete-post-btn {
+    padding: 8px 10px;
+    display: flex; /* Enables flexbox */
+    align-items: center; /* Vertically centers the content */
+    text-decoration: none; /* Removes underline from the link */
+    cursor: pointer;
+    border: none; /* Removes default button border */
+    background: none; /* Removes default button background */
+    width: 100%; /* Makes sure the button takes up the full width of the parent */
+    /* Add any additional button styling here */
+}
+
+    form > button.icon-link > ion-icon, button.delete-post-btn > ion-icon {
+        margin-right: 8px; /* Adds space between the icon and text */
+    }
+

@@ -1,0 +1,137 @@
+﻿@model User;
+
+<main id="site__main" class="2xl:ml-[--w-side]  xl:ml-[--w-side-sm] p-2.5 h-[calc(100vh-var(--m-top))] mt-[--m-top]">
+
+    <div class="max-w-3xl mx-auto">
+        <div class="box relative rounded-lg shadow-md">
+
+            @* profile picture section *@
+            <div class="flex items-center justify-between p-6 pb-4">
+
+                <form id="updateProfilePictureForm" class="flex items-center gap-4 w-full" asp-controller="Settings" asp-action="UpdateProfilePicture" enctype="multipart/form-data">
+                    <div class="relative w-12 h-12 shrink-0">
+                        <label for="imageUpload" class="cursor-pointer">
+                            <img id="imagePreview" src="@(Model.ProfilePictureUrl ?? "~/images/avatar/user.png")" class="object-cover w-full h-full rounded-full" alt="Profile Picture Placeholder" />
+                            <input type="file" id="imageUpload" name="ProfilePictureImage" class="hidden" accept="image/png, image/jpeg" />
+                        </label>
+
+                        <label for="imageUpload" class="p-0.5 rounded-full bg-slate-600 border-white absolute -bottom-2 -right-2 cursor-pointer">
+                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-3 h-3 fill-white">
+                                <path d="M12 9a3.75 3.75 0 100 7.5A3.75 3.75 0 0012 9z" />
+                                <path fill-rule="evenodd" d="M9.344 3.071a49.52 49.52 0 015.312 0c.967.052 1.83.585 2.332 1.39l.821 1.317c.24.383.645.643 1.11.71.386.054.77.113 1.152.177 1.432.239 2.429 1.493 2.429 2.909V18a3 3 0 01-3 3h-15a3 3 0 01-3-3V9.574c0-1.416.997-2.67 2.429-2.909.382-.064.766-.123 1.151-.178a1.56 1.56 0 001.11-.71l.822-1.315a2.942 2.942 0 012.332-1.39zM6.75 12.75a5.25 5.25 0 1110.5 0 5.25 5.25 0 01-10.5 0zm12-1.5a.75.75 0 100-1.5.75.75 0 000 1.5z" clip-rule="evenodd" />
+                            </svg>
+                        </label>
+                    </div>
+                    <div>
+                        <h3 class="text-base font-semibold text-black">@Model.FullName</h3>
+                        <p class="text-sm text-blue-600 mt-1 font-normal">@@ervistrupja </p>
+                    </div>
+                    <button type="submit" id="saveButton" class="hidden button bg-blue-500 text-white px-4 py-1 rounded ml-auto">Save</button>
+
+                </form>
+                </div>
+
+            <div class="relative border-b">
+                <nav class="nav__underline px-6 p-0 border-transparent -mb-px">
+                    <ul class="uk-slider-items w-[calc(100%+10px)] !overflow-hidden" 
+                        uk-switcher="connect: #setting_tab; animation: uk-animation-slide-right-medium, uk-animation-slide-left-medium">
+                        <li class="w-auto pr-2.5">
+                            <a href="#">
+                                Update profile
+                            </a>
+                        </li>
+                        <li class="w-auto pr-2.5"><a href="#">Update password</a></li>
+                    </ul>
+                </nav>
+            </div>
+
+            <div id="setting_tab" class="uk-switcher py-12 px-20 overflow-hidden text-black text-sm">
+                <div>
+                    <form asp-controller="Settings" asp-action="UpdateProfile">
+                        <div class="space-y-6">
+                            <div class="flex items-center gap-10">
+                                <label class="w-32 text-right">Full name</label>
+                                <div class="flex-1">
+                                    <input type="text" name="fullName" placeholder="Enter your full name" value="@Model.FullName" class="w-full" />
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-10">
+                                <label class="w-32 text-right">Username</label>
+                                <div class="flex-1">
+                                    <input type="text" name="username" placeholder="Enter your username" value="@@ervistrupja" class="w-full" />
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-10">
+                                <label class="w-32 text-right">Email</label>
+                                <div class="flex-1">
+                                    <input type="email" name="emailAddress" placeholder="Enter your email address" value="" class="w-full" />
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-10">
+                                <label class="w-32 text-right">Bio</label>
+                                <div class="flex-1">
+                                    <textarea class="w-full" name="bio" rows="5" placeholder="Enter your bio"></textarea>
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-4 mt-16 pl-[10.5rem]">
+                                <button class="button px-6 bg-secondary">Cancel</button>
+                                <button type="submit" class="button px-10 bg-primary text-white">Save</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div>
+                    <form asp-controller="Settings" asp-action="UpdatePassword">
+                        <div class="space-y-6">
+                            <div class="flex items-center gap-10">
+                                <label class="w-32 text-right">Current password</label>
+                                <div class="flex-1">
+                                    <input type="password" name="currentPassword" placeholder="Enter your current password" class="w-full" />
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-10">
+                                <label class="w-32 text-right">New password</label>
+                                <div class="flex-1">
+                                    <input type="password" name="newPassword" placeholder="Enter your new password" value="" class="w-full" />
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-10">
+                                <label class="w-32 text-right">Confirm password</label>
+                                <div class="flex-1">
+                                    <input type="password" name="confirmPassword" placeholder="Confirm your new password" value="" class="w-full" />
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-4 mt-16 pl-[10.5rem]">
+                                <button class="button px-6 bg-secondary">Cancel</button>
+                                <button type="submit" class="button px-10 bg-primary text-white">Save</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            </div>
+        </div>
+</main>
+
+<script>
+
+    const imageUpload = document.getElementById('imageUpload');
+    const imagePreview = document.getElementById('imagePreview');
+    const saveButton = document.getElementById('saveButton');
+
+    imageUpload.addEventListener('change', (event) => {
+        const file = event.target.files[0];
+
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                imagePreview.src = e.target.result;
+                saveButton.classList.remove('hidden');
+            }
+            reader.readAsDataURL(file);
+        } else {
+            saveButton.classList.add('hidden');
+        }
+    });
+
+</script>

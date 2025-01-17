@@ -1,0 +1,68 @@
+﻿@model PostVM
+
+<div class="hidden lg:p-20" id="create-status" uk-modal="">
+
+    <div class="uk-modal-dialog tt relative overflow-hidden mx-auto bg-white shadow-xl rounded-lg md:w-[520px] w-full">
+        <div class="text-center py-4 border-b mb-0">
+            <h2 class="text-sm font-medium text-black">Create Status</h2>
+            <button type="button" class="button-icon absolute top-0 right-0 m-2.5 uk-modal-close">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+            </button>
+        </div>
+
+        <form asp-controller="Home" asp-action="CreatePost" enctype="multipart/form-data">
+            <div class="space-y-5 mt-3 p-2">
+                <textarea class="w-full !text-black placeholder:!text-black !bg-white !border-transparent focus:!border-transparent focus:!ring-transparent !font-normal !text-xl"
+                name="content"
+                asp-for="@Model.Content"
+                rows="2"
+                placeholder="What do you have in mind?"></textarea>
+            </div>
+
+            <div class="flex items-center gap-2 text-sm py-2 px-4 font-medium flex-wrap">
+                <input id="imageUpload" type="file" class="hidden" name="image" accept="image/png, image/jpeg"  />
+
+                <div id="imagePreviewContainer" class="hidden">
+                    <img id="imagePreview" src="#" class="w-full h-auto rounded" />
+                </div>
+
+                <button type="button" id="imageUploadBtn" class="flex items-center gap-1.5 bg-sky-50 text-sky-600 rounded-full py-1 px-2 border-2 border-sky-100">
+                    <ion-icon name="image" class="text-base"></ion-icon> Image
+                </button>
+            </div>
+
+            <div class="p-5 flex justify-between items-center">
+                <div class="flex items-center gap-2">
+                    <button type="submit" class="button bg-blue-500 text-white py-2 px-12 text-[14px]"> Create </button>
+                </div>
+            </div>
+
+        </form>
+    </div>
+</div>
+
+<script>
+    document.getElementById('imageUploadBtn').addEventListener('click', () => {
+        document.getElementById('imageUpload').click();
+    });
+
+    document.getElementById('imageUpload').addEventListener('change', (event) => {
+        const file = event.target.files[0];
+        const imagePreview = document.getElementById('imagePreview');
+        const imagePreviewContainer = document.getElementById('imagePreviewContainer');
+
+        if (file) {
+            const reader = new FileReader();
+            imagePreviewContainer.classList.remove('hidden');
+            reader.onload = (e) => {
+                imagePreview.src = e.target.result;
+            }
+            reader.readAsDataURL(file);
+        } else {
+            imagePreviewContainer.classList.add('hidden');
+        }
+    });
+
+</script>
