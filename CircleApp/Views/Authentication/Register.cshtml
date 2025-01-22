@@ -15,6 +15,8 @@
 
                 <div class="grid grid-cols-2 gap-4 gap-y-7">
 
+                    <div class="col-span-2 text-red-500" asp-validation-summary="ModelOnly" ></div>
+
                     <div>
                         <label asp-for="FirstName">First name</label>
                         <div class="mt-2.5">
@@ -34,7 +36,6 @@
                         <div class="mt-2.5">
                             <input asp-for="Email" id="email" name="email" type="email" placeholder="Email" required="" class="!w-full" />
                             <span asp-validation-for="Email" class="text-red-500 text-xs mt-1"></span>
-
                         </div>
                     </div>
                     <div>

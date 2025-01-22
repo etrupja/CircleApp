@@ -56,7 +56,12 @@ namespace CircleApp.Controllers
                 return RedirectToAction("Index", "Home");
             }
 
-            return View();
+            foreach (var error in result.Errors)
+            {
+                ModelState.AddModelError("", error.Description);
+            }
+
+            return View(registerVM);
         }
     }
 }
