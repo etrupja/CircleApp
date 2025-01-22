@@ -1,6 +1,7 @@
 ﻿using CircleApp.Data.Helpers.Constants;
 using CircleApp.Data.Models;
 using CircleApp.ViewModels.Authentication;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
@@ -76,6 +77,13 @@ namespace CircleApp.Controllers
             }
 
             return View(registerVM);
+        }
+
+        [Authorize]
+        public async Task<IActionResult> Logout()
+        {
+            await _signInManager.SignOutAsync();
+            return RedirectToAction("Login");
         }
     }
 }
