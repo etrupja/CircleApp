@@ -47,24 +47,24 @@
 
             <div id="setting_tab" class="uk-switcher py-12 px-20 overflow-hidden text-black text-sm">
                 <div>
-                    <form asp-controller="Settings" asp-action="UpdateProfile">
+                    <form asp-controller="Authentication" asp-action="UpdateProfile">
                         <div class="space-y-6">
+
+                            @if (TempData["UserProfileError"] != null)
+                            {
+                                <div class="text-red-500 mb-4">@TempData["UserProfileError"]</div>
+                            }
+
                             <div class="flex items-center gap-10">
                                 <label class="w-32 text-right">Full name</label>
                                 <div class="flex-1">
-                                    <input type="text" name="fullName" placeholder="Enter your full name" value="@Model.FullName" class="w-full" />
+                                    <input type="text" name="fullName" placeholder="Enter your full name"  class="w-full" />
                                 </div>
                             </div>
                             <div class="flex items-center gap-10">
                                 <label class="w-32 text-right">Username</label>
                                 <div class="flex-1">
-                                    <input type="text" name="username" placeholder="Enter your username" value="@@ervistrupja" class="w-full" />
-                                </div>
-                            </div>
-                            <div class="flex items-center gap-10">
-                                <label class="w-32 text-right">Email</label>
-                                <div class="flex-1">
-                                    <input type="email" name="emailAddress" placeholder="Enter your email address" value="" class="w-full" />
+                                    <input type="text" name="username" placeholder="Enter your username" class="w-full" />
                                 </div>
                             </div>
                             <div class="flex items-center gap-10">
