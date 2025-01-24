@@ -81,8 +81,20 @@
                     </form>
                 </div>
                 <div>
-                    <form asp-controller="Settings" asp-action="UpdatePassword">
+                    <form asp-controller="Authentication" asp-action="UpdatePassword">
                         <div class="space-y-6">
+
+                            @if (TempData["PasswordError"] != null)
+                            {
+                                <div class="text-red-500 mb-4">@TempData["PasswordError"]</div>
+                            }
+
+                            @if (TempData["PasswordSuccess"] != null)
+                            {
+                                <div class="text-green-500 mb-4">@TempData["PasswordSuccess"]</div>
+
+                            }
+
                             <div class="flex items-center gap-10">
                                 <label class="w-32 text-right">Current password</label>
                                 <div class="flex-1">
@@ -131,6 +143,16 @@
             reader.readAsDataURL(file);
         } else {
             saveButton.classList.add('hidden');
+        }
+    });
+
+    document.addEventListener('DOMContentLoaded', () => {
+        const switcher = UIkit.switcher(document.querySelector('[uk-switcher]'));
+
+        if ('@TempData["ActiveTab"]' === 'Password') {
+            switcher.show(1);
+        } else {
+            switcher.show(0);
         }
     });
 

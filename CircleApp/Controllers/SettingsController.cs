@@ -40,10 +40,6 @@ namespace CircleApp.Controllers
             return RedirectToAction("Index");
         }
 
-        [HttpPost]
-        public async Task<IActionResult> UpdatePassword(UpdatePasswordVM updatePasswordVM)
-        {
-            return RedirectToAction("Index");
-        }
+        
     }
 }

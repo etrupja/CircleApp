@@ -1,6 +1,7 @@
 ﻿using CircleApp.Data.Helpers.Constants;
 using CircleApp.Data.Models;
 using CircleApp.ViewModels.Authentication;
+using CircleApp.ViewModels.Settings;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -90,6 +91,39 @@ namespace CircleApp.Controllers
             }
 
             return View(registerVM);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> UpdatePassword(UpdatePasswordVM updatePasswordVM)
+        {
+            if(updatePasswordVM.NewPassword != updatePasswordVM.ConfirmPassword)
+            {
+                TempData["PasswordError"] = "Passwords do not match";
+                TempData["ActiveTab"] = "Password";
+
+                return RedirectToAction("Index","Settings");
+            }
+
+            var loggedInUser = await _userManager.GetUserAsync(User);
+            var isCurrentPasswordValid = await _userManager.CheckPasswordAsync(loggedInUser, updatePasswordVM.CurrentPassword);
+
+            if(!isCurrentPasswordValid)
+            {
+                TempData["PasswordError"] = "Current password is invalid";
+                TempData["ActiveTab"] = "Password";
+                return RedirectToAction("Index", "Settings");
+            }
+
+            var result = await _userManager.ChangePasswordAsync(loggedInUser, updatePasswordVM.CurrentPassword, updatePasswordVM.NewPassword);
+
+            if (result.Succeeded)
+            {
+                TempData["PasswordSuccess"] = "Password updated successfully";
+                TempData["ActiveTab"] = "Password";
+                await _signInManager.RefreshSignInAsync(loggedInUser);
+            }
+
+            return RedirectToAction("Index", "Settings");
         }
 
         [Authorize]
