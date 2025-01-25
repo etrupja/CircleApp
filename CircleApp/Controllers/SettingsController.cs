@@ -1,4 +1,5 @@
-﻿using CircleApp.Data.Models;
+﻿using CircleApp.Controllers.Base;
+using CircleApp.Data.Models;
 using CircleApp.Data.Services;
 using CircleApp.ViewModels.Settings;
 using Microsoft.AspNetCore.Authorization;
@@ -9,7 +10,7 @@ using System.Security.Claims;
 namespace CircleApp.Controllers
 {
     [Authorize]
-    public class SettingsController : Controller
+    public class SettingsController : BaseController
     {
         private readonly IUsersService _usersService;
         private readonly IFilesService _filesService;
@@ -25,9 +26,6 @@ namespace CircleApp.Controllers
 
         public async Task<IActionResult> Index()
         {
-            var loggedInUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var userDb = await _usersService.GetUser(int.Parse(loggedInUserId));
-
             var loggedInUser = await _userManager.GetUserAsync(User);
             return View(loggedInUser);
         }
@@ -35,10 +33,12 @@ namespace CircleApp.Controllers
         [HttpPost]
         public async Task<IActionResult> UpdateProfilePicture(UpdateProfilePictureVM profilePictureVM)
         {
-            var loggedInUser = 1;
+            var loggedInUserId = GetUserId();
+            if (loggedInUserId == null) return RedirectToLogin();
+
             var uploadedProfilePictureUrl = await _filesService.UploadImageAsync(profilePictureVM.ProfilePictureImage, Data.Helpers.Enums.ImageFileType.ProfilePicture);
 
-            await _usersService.UpdateUserProfilePicture(loggedInUser, uploadedProfilePictureUrl);
+            await _usersService.UpdateUserProfilePicture(loggedInUserId.Value, uploadedProfilePictureUrl);
 
             return RedirectToAction("Index");
         }
