@@ -1,7 +1,10 @@
-﻿@using System.Security.Claims;
+﻿@inject UserManager<User> UserManager;
+
 @{
-    var username = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
-    var fullName = User.Claims.FirstOrDefault(c => c.Type == CustomClaim.FullName)?.Value;
+    var loggedInUser = await UserManager.GetUserAsync(User);
+    var userName = loggedInUser?.UserName;
+    var fullName = loggedInUser?.FullName;
+    var profilePictureUrl = loggedInUser?.ProfilePictureUrl;
 }
 
 <header class="z-[100] h-[--m-top] fixed top-0 left-0 w-full flex items-center bg-white/80 sky-50 backdrop-blur-xl border-b border-slate-200">
@@ -59,16 +62,16 @@
                 </div>
 
                 <div class="rounded-full relative bg-secondery cursor-pointer shrink-0">
-                    <img src="~/images/avatar/user.png" class="sm:w-9 sm:h-9 w-7 h-7 rounded-full shadow shrink-0" />
+                    <img src="@(string.IsNullOrEmpty(profilePictureUrl) ? Url.Content("~/images/avatar/user.png") : Url.Content(profilePictureUrl))" class="sm:w-9 sm:h-9 w-7 h-7 rounded-full shadow shrink-0" />
                 </div>
                 <div class="hidden bg-white rounded-lg drop-shadow-xl w-64 border2" uk-drop="offset:6;pos: bottom-right;animate-out: true;">
 
                     <a>
                         <div class="p-4 py-5 flex items-center gap-4">
-                            <img src="~/images/avatar/user.png" class="w-10 h-10 rounded-full shadow" />
+                            <img src="@(string.IsNullOrEmpty(profilePictureUrl) ? Url.Content("~/images/avatar/user.png") : Url.Content(profilePictureUrl))"" class="w-10 h-10 rounded-full shadow" />
                             <div class="flex-1">
                                 <h4 class="text-sm font-medium text-black">@fullName</h4>
-                                <div class="text-sm mt-1 text-blue-600 font-light/70">@username</div>
+                                <div class="text-sm mt-1 text-blue-600 font-light/70">@userName</div>
                             </div>
                         </div>
                     </a>
