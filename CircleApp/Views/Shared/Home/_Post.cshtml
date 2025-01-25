@@ -18,23 +18,18 @@
     bool isLiked = Model.Likes.Any(n => n.UserId == loggedInUserId);
     bool isPrivate = Model.IsPrivate == true && Model.UserId == loggedInUserId;
     bool isReported = Model.Reports.Any(n => n.UserId == loggedInUserId);
-
-    string defaultUserPicture = "~/images/avatar/user.png";
-
     bool showAllComments = ViewData["ShowAllComment"] as bool? ?? false;
-
-
 }
 
 <div class="bg-white rounded-xl shadow-sm text-sm font-medium border1">
 
     @* Post heading *@
     <div class="flex gap-3 sm:p-4 p-2.5 text-sm font-medium">
-        <a>
-            <img src="@(!string.IsNullOrEmpty(Model.User.ProfilePictureUrl) ? Url.Content("~/"+Model.User.ProfilePictureUrl) : defaultUserPicture)" class="w-9 h-9 rounded-full" />
+        <a asp-controller="Users" asp-action="Details" asp-route-userId="@Model.UserId">
+            <img src="@(!string.IsNullOrEmpty(Model.User.ProfilePictureUrl) ? Url.Content("~/"+Model.User.ProfilePictureUrl) : Url.Content("~/images/avatar/user.png"))" class="w-9 h-9 rounded-full" />
         </a>
         <div class="flex-1">
-            <a>
+            <a asp-controller="Users" asp-action="Details" asp-route-userId="@Model.UserId">
                 <h4 class="text-black">@Model.User.FullName</h4>
                 <div class="text-xs text-gray-500/80" title="@Model.DateCreated.ToString("MM/dd/yyyy HH:mm")"> @displayTime </div>
             </a>
@@ -152,12 +147,12 @@
                 };
 
                 <div class="flex items-start gap-3 relative">
-                    <a>
-                        <img src="@(!string.IsNullOrEmpty(comment.User.ProfilePictureUrl) ? Url.Content("~/"+comment.User.ProfilePictureUrl) : defaultUserPicture)" class="w-6 h-6 mt-1 rounded-full" />
+                    <a asp-controller="Users" asp-action="Details" asp-route-userId="@comment.UserId">
+                        <img src="@(!string.IsNullOrEmpty(comment.User.ProfilePictureUrl) ? Url.Content("~/"+comment.User.ProfilePictureUrl) : Url.Content("~/images/avatar/user.png"))" class="w-6 h-6 mt-1 rounded-full" />
                     </a>
                     <div class="flex-1">
                         <div class="flex justify-content-between">
-                            <a class="text-black font-medium inline-block flex-grow">
+                            <a asp-controller="Users" asp-action="Details" asp-route-userId="@comment.UserId" class="text-black font-medium inline-block flex-grow">
                                 @comment.User.FullName
                             </a>
                             <small>@commentDisplayTime</small>
@@ -193,7 +188,10 @@
         <form asp-controller="Home" asp-action="AddPostComment">
 
             <div class="sm:px-4 sm:py-3 p-2.5 border-t border-gray-100 flex items-center gap-1">
-                <img src="~/images/avatar/user.png" class="w-6 h-6 rounded-full" />
+                <a asp-controller="Users" asp-action="Detalis" asp-route-userId="@Model.UserId">
+                    <img src="@(string.IsNullOrEmpty(Model.User.ProfilePictureUrl) ? Url.Content("~/images/avatar/user.png") : Url.Content(Model.User.ProfilePictureUrl))" class="w-6 h-6 rounded-full" />
+                </a>
+               
 
                 <input type="hidden" name="postId" value="@Model.Id" />
                 <div class="flex-1 relative overflow-hidden h-10">
