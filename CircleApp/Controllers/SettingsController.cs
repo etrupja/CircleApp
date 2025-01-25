@@ -1,9 +1,11 @@
 ﻿using CircleApp.Data.Services;
 using CircleApp.ViewModels.Settings;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CircleApp.Controllers
 {
+    [Authorize]
     public class SettingsController : Controller
     {
         private readonly IUsersService _usersService;
@@ -29,18 +31,6 @@ namespace CircleApp.Controllers
 
             await _usersService.UpdateUserProfilePicture(loggedInUser, uploadedProfilePictureUrl);
 
-            return RedirectToAction("Index");
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> UpdateProfile(UpdateProfileVM profileVM)
-        {
-            return RedirectToAction("Index");
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> UpdatePassword(UpdatePasswordVM updatePasswordVM)
-        {
             return RedirectToAction("Index");
         }
     }
