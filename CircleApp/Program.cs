@@ -49,7 +49,11 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
         options.ClientId = builder.Configuration["Auth:Google:ClientId"] ?? "";
         options.ClientSecret = builder.Configuration["Auth:Google:ClientSecret"] ?? "";
         options.CallbackPath = "/signin-google";
-        options.Scope.Add("profile");
+    }).AddGitHub(options =>
+    {
+        options.ClientId = builder.Configuration["Auth:GitHub:ClientId"] ?? "";
+        options.ClientSecret = builder.Configuration["Auth:GitHub:ClientSecret"] ?? "";
+        options.CallbackPath = "/signin-github";
     });
 
 builder.Services.AddAuthorization();
