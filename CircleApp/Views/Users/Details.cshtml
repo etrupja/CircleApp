@@ -23,14 +23,17 @@
             <div class="flex-1 xl:space-y-6 space-y-3">
                 @foreach (var post in Model)
                 {
-                    <partial name="Home/_Post" 
-                             model="post" 
-                             view-data='new ViewDataDictionary(ViewData) { { "ShowAllComment", false } }' />
+                    <partial name="Home/_Post" model="post"
+                             view-data='new ViewDataDictionary(ViewData)
+                            {
+                                { "ShowAllComment", false },
+                                {"ShowDetails", false }
+                            }' />
                 }
             </div>
             <div class="lg:w-[400px]">
                 <div class="lg:space-y-4 lg:pb-8 max-lg:grid sm:grid-cols-2 max-lg:gap-6"
-                         uk-sticky="media: 1024; end: #js-oversized; offset: 80">
+                     uk-sticky="media: 1024; end: #js-oversized; offset: 80">
                     <div class="box p-5 px-6">
                         <div class="flex items-ce justify-between text-black">
 
@@ -58,8 +61,8 @@
                                 <div class="mt-2 line-clamp-1">Ervis Trupja</div>
                             </div>
                         </div>
-                        </div>
                     </div>
+                </div>
             </div>
         </div>
     </div>
