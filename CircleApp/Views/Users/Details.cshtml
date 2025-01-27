@@ -1,4 +1,6 @@
-﻿<main id="site__main" class="2xl:ml-[--w-side]  xl:ml-[--w-side-sm] p-2.5 h-[calc(100vh-var(--m-top))] mt-[--m-top]">
+﻿@model List<Post>
+
+<main id="site__main" class="2xl:ml-[--w-side]  xl:ml-[--w-side-sm] p-2.5 h-[calc(100vh-var(--m-top))] mt-[--m-top]">
 
     <div class="max-w-[1065px] mx-auto max-lg:-m-2.5">
         <div class="bg-white shadow lg:rounded-b-xl lg:-mt-10">
@@ -19,7 +21,12 @@
         </div>
         <div class="flex 2xl:gap-12 gap-10 mt-8 max-lg:flex-col" id="js-oversized">
             <div class="flex-1 xl:space-y-6 space-y-3">
-
+                @foreach (var post in Model)
+                {
+                    <partial name="Home/_Post" 
+                             model="post" 
+                             view-data='new ViewDataDictionary(ViewData) { { "ShowAllComment", false } }' />
+                }
             </div>
             <div class="lg:w-[400px]">
                 <div class="lg:space-y-4 lg:pb-8 max-lg:grid sm:grid-cols-2 max-lg:gap-6"
