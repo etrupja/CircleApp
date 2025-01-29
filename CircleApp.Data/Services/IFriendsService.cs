@@ -8,6 +8,8 @@ namespace CircleApp.Data.Services
 {
     public interface IFriendsService
     {
-        Task<bool> SendRequest(int senderId, int receiverId);
+        Task SendRequestAsync(int senderId, int receiverId);
+        Task UpdateRequestAsync(int requestId, string status);
+        Task RemoveFriendAsync(int frienshipId);
     }
 }
