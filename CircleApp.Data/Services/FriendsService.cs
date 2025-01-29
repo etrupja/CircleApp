@@ -17,6 +17,30 @@ namespace CircleApp.Data.Services
             _context = context;
         }
 
+        public async Task<List<User>> GetSuggestedFriendsAsync(int userId)
+        {
+            var existingFriendIds = await _context.Friendships
+                .Where(n => n.SenderId == userId || n.ReceiverId == userId)
+                .Select(n => n.SenderId == userId ? n.ReceiverId : n.SenderId)
+                .ToListAsync();
+
+            //pending requests
+            var pendingRequestIds = await _context.FriendRequests
+                .Where(n => (n.SenderId == userId || n.ReceiverId == userId) && n.Status == FriendshipStatus.Pending)
+                .Select(n => n.SenderId == userId ? n.ReceiverId : n.SenderId)
+                .ToListAsync();
+
+            //get suggeted friends
+            var suggestedFriends = await _context.Users
+                .Where(n => n.Id != userId && 
+                !existingFriendIds.Contains(n.Id) && 
+                !pendingRequestIds.Contains(n.Id))
+                .Take(5)
+                .ToListAsync();
+
+            return suggestedFriends;
+        }
+
         public async Task UpdateRequestAsync(int requestId, string newStatus)
         {
             var requestDb = await _context.FriendRequests.FirstOrDefaultAsync(n => n.Id == requestId);

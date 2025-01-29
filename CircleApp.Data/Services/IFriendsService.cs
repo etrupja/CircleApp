@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CircleApp.Data.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -11,5 +12,6 @@ namespace CircleApp.Data.Services
         Task SendRequestAsync(int senderId, int receiverId);
         Task UpdateRequestAsync(int requestId, string status);
         Task RemoveFriendAsync(int frienshipId);
+        Task<List<User>> GetSuggestedFriendsAsync(int userId);
     }
 }
