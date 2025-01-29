@@ -1,4 +1,4 @@
-﻿@model List<User>
+﻿@model List<UserWithFriendsCountVM>
 <div class="flex items-baseline justify-between text-black">
     <h3 class="font-bold text-base"> People you may know </h3>
 </div>
@@ -16,7 +16,7 @@
                         @user.FullName
                     </h4>
                 </a>
-                <div class="side-list-info">5 followers</div>
+                <div class="side-list-info">@user.FriendsCountDisplay</div>
             </div>
             <form>
                 <button type="submit" class="button bg-primary-soft text-primary">Follow</button>
