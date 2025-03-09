@@ -1,4 +1,5 @@
 ﻿using CircleApp.Controllers.Base;
+using CircleApp.Data.Helpers.Constants;
 using CircleApp.Data.Services;
 using CircleApp.ViewModels.Friends;
 using Microsoft.AspNetCore.Mvc;
@@ -36,6 +37,13 @@ namespace CircleApp.Controllers
 
             await _friendsService.SendRequestAsync(userId.Value, receiverId);
             return RedirectToAction("Index", "Home");
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> CancelFriendRequest(int requestId)
+        {
+            await _friendsService.UpdateRequestAsync(requestId, FriendshipStatus.Canceled);
+            return RedirectToAction("Index");
         }
 
     }

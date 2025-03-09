@@ -69,7 +69,8 @@
                             <a asp-controller="Users" asp-action="Details" asp-route-userId="@request.Receiver.Id" class="text-base font-semibold capitalize text-black">@request.Receiver.FullName</a>
                         </div>
 
-                        <form>
+                        <form asp-controller="Friends" asp-action="CancelFriendRequest" method="post">
+                            <input type="hidden" name="requestId" value="@request.Id" />
                             <button type="submit" class="button text-primary gap-1 max-md:hidden">
                                 <ion-icon name="remove-circle-outline" class="text-xl -ml-1"></ion-icon> Cancel
                             </button>
