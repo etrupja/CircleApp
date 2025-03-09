@@ -142,11 +142,13 @@ namespace CircleApp.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> RemovePostComment(RemoveCommentVM removeCommentVM)
         {
             await _postsService.RemovePostCommentAsync(removeCommentVM.CommentId);
 
-            return RedirectToAction("Index");
+            var post = await _postsService.GetPostByIdAsync(removeCommentVM.PostId);
+            return PartialView("Home/_Post", post);
         }
 
         [HttpPost]

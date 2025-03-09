@@ -4,7 +4,7 @@
     <div class="lg:flex 2xl:gap-16 gap-12 max-w-[1065px] mx-auto" id="js-oversized">
         <div class="max-w-[680px] mx-auto">
 
-            @await Component.InvokeAsync("Stories") 
+            @await Component.InvokeAsync("Stories")
 
             <div class="md:max-w-[580px] mx-auto flex-1 xl:space-y-6 space-y-3">
 
@@ -54,7 +54,7 @@
                     @await Component.InvokeAsync("SuggestedFriends")
                 </div>
                 <div class="box p-5 px-6 border1">
-                    @await Component.InvokeAsync("Hashtags") 
+                    @await Component.InvokeAsync("Hashtags")
                 </div>
             </div>
         </div>
@@ -115,6 +115,27 @@
                         postContainer.innerHTML = html;
                     })
                     .catch(error => console.error('Error: ', error));
+            }
+
+            if (form.classList.contains('remove-comment-form')) {
+                event.preventDefault();
+
+                var postId = form.querySelector('input[name="postId"]').value;
+                var commentId = form.querySelector('input[name="commentId"]').value;
+
+                var postContainer = document.getElementById('post-' + postId);
+
+                fetch(form.action, {
+                    method: 'POST',
+                    body: new FormData(form),
+                    headers: {}
+                })
+                    .then(response => response.text())
+                    .then(html => {
+                        postContainer.innerHTML = html;
+                    })
+                    .catch(error => console.error('Error: ', error));
+
             }
         })
     })
