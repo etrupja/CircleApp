@@ -61,5 +61,12 @@ namespace CircleApp.Controllers
             return RedirectToAction("Index");
         }
 
+        [HttpPost]
+        public async Task<IActionResult> RemoveFriend(int friendshipId)
+        {
+            await _friendsService.RemoveFriendAsync(friendshipId);
+            return RedirectToAction("Index");
+        }
+
     }
 }
