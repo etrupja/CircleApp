@@ -53,16 +53,17 @@
                     <div class="flex md:items-center space-x-4 p-4 rounded-md box">
 
                         <div class="w-14 h-14 flex-shrink-0 rounded-lg relative">
-                            <img src="@(string.IsNullOrEmpty(request.Receiver.ProfilePictureUrl) ? Url.Content("~/images/avatar/user.png") :
-                     Url.Content(request.Receiver.ProfilePictureUrl))"
+                            <img src="@(string.IsNullOrEmpty(request.Sender.ProfilePictureUrl) ? Url.Content("~/images/avatar/user.png") :
+                     Url.Content(request.Sender.ProfilePictureUrl))"
                                  class="absolute w-full h-full inset-0 rounded-md object-cover shadow-sm" />
                         </div>
 
                         <div class="flex-1">
-                            <a asp-controller="Users" asp-action="Details" asp-route-userId="@request.Receiver.Id" class="text-base font-semibold capitalize text-black">@request.Receiver.FullName</a>
+                            <a asp-controller="Users" asp-action="Details" asp-route-userId="@request.Sender.Id" class="text-base font-semibold capitalize text-black">@request.Sender.FullName</a>
                         </div>
 
-                        <form>
+                        <form asp-controller="Friends" asp-action="RejectFriendRequest" method="post">
+                            <input type="hidden" name="requestId" value="@request.Id" />
                             <button type="submit" class="button bg-red-soft text-red gap-1 max-md:hidden">
                                 <ion-icon name="remove-circle-outline" class="text-xl -ml-1"></ion-icon> Reject
                             </button>
