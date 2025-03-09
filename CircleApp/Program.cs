@@ -3,6 +3,7 @@ using CircleApp.Data;
 using CircleApp.Data.Helpers;
 using CircleApp.Data.Models;
 using CircleApp.Data.Services;
+using CircleApp.Hubs;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -59,6 +60,8 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
 
 builder.Services.AddAuthorization();
 
+builder.Services.AddSignalR(); // Register SignalR services
+
 var app = builder.Build();
 
 //Seed the database with initial data
@@ -92,5 +95,7 @@ app.UseAuthorization();
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
+
+app.MapHub<NotificationHub>("/notificationHub");
 
 app.Run();
