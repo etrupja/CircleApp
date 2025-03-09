@@ -92,7 +92,8 @@ namespace CircleApp.Controllers
             if (loggedInUserId == null) return RedirectToLogin();
             await _postsService.TogglePostFavoriteAsync(postFavoriteVM.PostId, loggedInUserId.Value);
 
-            return RedirectToAction("Index");
+            var post = await _postsService.GetPostByIdAsync(postFavoriteVM.PostId);
+            return PartialView("Home/_Post", post);
         }
 
 
