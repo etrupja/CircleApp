@@ -108,6 +108,7 @@ namespace CircleApp.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> AddPostComment(PostCommentVM postCommentVM)
         {
             var loggedInUserId = GetUserId();
@@ -125,7 +126,8 @@ namespace CircleApp.Controllers
 
             await _postsService.AddPostCommentAsync(newComment);
 
-            return RedirectToAction("Index");
+            var post = await _postsService.GetPostByIdAsync(postCommentVM.PostId);
+            return PartialView("Home/_Post", post);
         }
 
         [HttpPost]

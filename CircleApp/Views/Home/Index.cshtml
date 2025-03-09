@@ -94,6 +94,28 @@
                     })
                     .catch(error => console.error('Error: ', error));
             }
+        });
+
+        document.getElementById('posts-container').addEventListener('submit', function () {
+            var form = event.target;
+
+            if (form.classList.contains('add-comment-form')) {
+                event.preventDefault();
+
+                var postId = form.querySelector('input[name="postId"]').value;
+                var postContainer = document.getElementById('post-' + postId);
+
+                fetch(form.action, {
+                    method: 'POST',
+                    body: new FormData(form),
+                    headers: {}
+                })
+                    .then(response => response.text())
+                    .then(html => {
+                        postContainer.innerHTML = html;
+                    })
+                    .catch(error => console.error('Error: ', error));
+            }
         })
     })
 
