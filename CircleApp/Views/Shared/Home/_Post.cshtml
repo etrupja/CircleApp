@@ -23,7 +23,7 @@
     bool showDetails = ViewData["ShowDetails"] as bool? ?? true;
 }
 
-<div class="bg-white rounded-xl shadow-sm text-sm font-medium border1">
+<div id="post-@Model.Id" class="bg-white rounded-xl shadow-sm text-sm font-medium border1">
 
     @* Post heading *@
     <div class="flex gap-3 sm:p-4 p-2.5 text-sm font-medium">
@@ -96,8 +96,9 @@
 
         <div class="flex items-center gap-2.5">
             <form asp-controller="Home" asp-action="TogglePostLike">
+                @Html.AntiForgeryToken()
                 <input type="hidden" name="postId" value="@Model.Id" />
-                <button type="submit" class="button-icon @(isLiked ? "text-red-500 bg-red-100" : "")">
+                <button type="submit" class="button-icon like-button @(isLiked ? "text-red-500 bg-red-100" : "")">
                     <ion-icon class="text-lg"
                               name="@(isLiked ? "heart" : "heart-outline")"></ion-icon>
                 </button>
