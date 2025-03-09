@@ -95,5 +95,37 @@ namespace CircleApp.Data.Services
                 await _context.SaveChangesAsync();
             }
         }
+
+        public async Task<List<Friendship>> GetFriendsAsync(int userId)
+        {
+            var friends = await _context.Friendships
+                .Where(n => n.SenderId == userId || n.ReceiverId == userId)
+                .Include(n => n.Sender)
+                .Include(n => n.Receiver)
+                .ToListAsync();
+            return friends;
+        }
+
+
+        public async Task<List<FriendRequest>> GetSentFriendRequestsAsync(int userId)
+        {
+            var friendRequestsSent = await _context.FriendRequests
+                .Include(f => f.Sender)
+                .Include(f => f.Receiver)
+                .Where(f => f.SenderId == userId && f.Status == FriendshipStatus.Pending)
+                .ToListAsync();
+
+            return friendRequestsSent;
+        }
+
+        public async Task<List<FriendRequest>> GetReceivedFriendRequestsAsync(int userId)
+        {
+            var friendRequestsReceived = await _context.FriendRequests
+                .Include(f => f.Sender)
+                .Include(f => f.Receiver)
+                .Where(f => f.ReceiverId == userId && f.Status == FriendshipStatus.Pending)
+                .ToListAsync();
+            return friendRequestsReceived;
+        }
     }
 }

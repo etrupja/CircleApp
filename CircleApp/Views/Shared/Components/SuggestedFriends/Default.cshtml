@@ -18,10 +18,47 @@
                 </a>
                 <div class="side-list-info">@user.FriendsCountDisplay</div>
             </div>
-            <form>
+            @*<form>
                 <button type="submit" class="button bg-primary-soft text-primary">Follow</button>
-            </form>
+            </form>*@
+
+        <form class="follow-form" data-user-id="@user.UserId">
+            @Html.AntiForgeryToken()
+            <input type="hidden" name="receiverId" value="@user.UserId" />
+            <button type="submit" class="button bg-primary-soft text-primary">Follow</button>
+        </form>
         </div>
     }
 
 </div>
+
+<script>document.addEventListener('DOMContentLoaded', function () {
+        document.querySelectorAll('.follow-form').forEach(function (form) {
+            form.addEventListener('submit', function (event) {
+                event.preventDefault(); // Prevent full page reload
+                var formData = new FormData(form);
+
+                fetch('/Friends/SendFriendRequest', {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest' // Mark as AJAX request
+                    }
+                })
+                .then(response => {
+                    if (response.ok) {
+                        // Refresh the SuggestedFriends view component
+                        fetch('/Friends/SuggestedFriends')
+                            .then(response => response.text())
+                            .then(html => {
+                                document.querySelector('.side-list').innerHTML = html;
+                            })
+                            .catch(error => console.error('Error refreshing view component:', error));
+                    } else {
+                        console.error('Failed to send friend request');
+                    }
+                })
+                .catch(error => console.error('Error during request:', error));
+            });
+        });
+    });</script>

@@ -92,15 +92,26 @@ namespace CircleApp.Data.Services
             return postDb;
         }
 
-        public async Task RemovePostCommentAsync(int commentId)
+        public async Task<int> RemovePostCommentAsync(int commentId)
         {
-            var commentDb = _context.Comments.FirstOrDefault(n => n.Id == commentId);
+            var commentDb = await _context.Comments.FirstOrDefaultAsync(n => n.Id == commentId);
 
-            if(commentDb != null)
+            if (commentDb != null)
             {
                 _context.Comments.Remove(commentDb);
-                await _context.SaveChangesAsync();
+                try
+                {
+                    await _context.SaveChangesAsync();
+                    return commentDb.PostId;
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    // Comment was already deleted by another operation
+                    return commentDb.PostId; // Still return PostId since the goal (comment removal) is achieved
+                }
             }
+
+            return 0; // Comment not found initially
         }
 
         public async Task ReportPostAsync(int postId, int userId)
@@ -176,6 +187,21 @@ namespace CircleApp.Data.Services
                 post.IsPrivate = !post.IsPrivate;
                 _context.Posts.Update(post);
                 await _context.SaveChangesAsync();
+            }
+        }
+
+        public async Task<int> GetCommentPostIdByIdAsync(int commentId)
+        {
+            var comment = await _context.Comments
+                .AsNoTracking()
+                .FirstOrDefaultAsync(n => n.Id == commentId);
+            if (comment != null)
+            {
+                return comment.PostId;
+            }
+            else
+            {
+                return 0;
             }
         }
     }

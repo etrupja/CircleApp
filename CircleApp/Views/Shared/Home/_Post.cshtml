@@ -23,7 +23,7 @@
     bool showDetails = ViewData["ShowDetails"] as bool? ?? true;
 }
 
-<div class="bg-white rounded-xl shadow-sm text-sm font-medium border1">
+<div id="post-@Model.Id" class="bg-white rounded-xl shadow-sm text-sm font-medium border1">
 
     @* Post heading *@
     <div class="flex gap-3 sm:p-4 p-2.5 text-sm font-medium">
@@ -96,8 +96,9 @@
 
         <div class="flex items-center gap-2.5">
             <form asp-controller="Home" asp-action="TogglePostLike">
+                @Html.AntiForgeryToken()
                 <input type="hidden" name="postId" value="@Model.Id" />
-                <button type="submit" class="button-icon @(isLiked ? "text-red-500 bg-red-100" : "")">
+                <button type="submit" class="button-icon like-button @(isLiked ? "text-red-500 bg-red-100" : "")">
                     <ion-icon class="text-lg"
                               name="@(isLiked ? "heart" : "heart-outline")"></ion-icon>
                 </button>
@@ -119,8 +120,9 @@
 
         <div class="flex items-center gap-2">
             <form asp-controller="Home" asp-action="TogglePostFavorite">
+                @Html.AntiForgeryToken()
                 <input type="hidden" name="postId" value="@Model.Id" />
-                <button type="submit" class="button-icon ml-auto @(isFavorited ? "text-orange-500 bt-orange-100":"")">
+                <button type="submit" class="button-icon ml-auto favorite-button @(isFavorited ? "text-orange-500 bt-orange-100":"")">
                     <ion-icon class="text-lg" name="@(isFavorited ? "bookmark":"bookmark-outline")"></ion-icon>
                 </button>
             </form>
@@ -169,7 +171,8 @@
                                     @comment.Content
                                 </p>
 
-                                <form asp-controller="Home" asp-action="RemovePostComment">
+                                <form asp-controller="Home" asp-action="RemovePostComment" class="remove-comment-form">
+                                    @Html.AntiForgeryToken()
                                     <input type="hidden" name="commentId" value="@comment.Id" />
                                     <button type="submit" class="text-red-500 text-xs ml-2" title="Remove post comment">
                                         <ion-icon name="trash-outline"></ion-icon>
@@ -192,8 +195,8 @@
 
             </div>
 
-            <form asp-controller="Home" asp-action="AddPostComment">
-
+            <form asp-controller="Home" asp-action="AddPostComment" class="add-comment-form">
+                @Html.AntiForgeryToken()
                 <div class="sm:px-4 sm:py-3 p-2.5 border-t border-gray-100 flex items-center gap-1">
                     <a asp-controller="Users" asp-action="Detalis" asp-route-userId="@Model.UserId">
                         <img src="@(string.IsNullOrEmpty(Model.User.ProfilePictureUrl) ? Url.Content("~/images/avatar/user.png") : Url.Content(Model.User.ProfilePictureUrl))" class="w-6 h-6 rounded-full" />

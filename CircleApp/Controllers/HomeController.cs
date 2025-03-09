@@ -2,9 +2,11 @@ using CircleApp.Controllers.Base;
 using CircleApp.Data.Helpers.Enums;
 using CircleApp.Data.Models;
 using CircleApp.Data.Services;
+using CircleApp.Hubs;
 using CircleApp.ViewModels.Home;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 
 namespace CircleApp.Controllers
 {
@@ -15,16 +17,19 @@ namespace CircleApp.Controllers
         private readonly IPostsService _postsService;
         private readonly IHashtagsService _hashtagsService;
         private readonly IFilesService _filesService;
+        private readonly IHubContext<NotificationHub> _hubContext;
 
         public HomeController(ILogger<HomeController> logger, 
             IPostsService postsService,
             IHashtagsService hashtagsService,
-            IFilesService filesService)
+            IFilesService filesService,
+            IHubContext<NotificationHub> hubContext)
         {
             _logger = logger;
             _postsService = postsService;
             _hashtagsService = hashtagsService;
             _filesService = filesService;
+            _hubContext = hubContext;
         }
 
         
@@ -72,7 +77,23 @@ namespace CircleApp.Controllers
         }
 
 
+        //[HttpPost]
+        //public async Task<IActionResult> TogglePostLike(PostLikeVM postLikeVM)
+        //{
+        //    var loggedInUserId = GetUserId();
+        //    if (loggedInUserId == null) return RedirectToLogin();
+
+        //    await _postsService.TogglePostLikeAsync(postLikeVM.PostId, loggedInUserId.Value);
+
+        //    var post = await _postsService.GetPostByIdAsync(postLikeVM.PostId);
+        //    await _hubContext.Clients.User(post.UserId.ToString()).SendAsync("ReceiveNotification", "Someone liked your post");
+
+        //    return RedirectToAction("Index");
+        //}
+
+
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> TogglePostLike(PostLikeVM postLikeVM)
         {
             var loggedInUserId = GetUserId();
@@ -80,19 +101,51 @@ namespace CircleApp.Controllers
 
             await _postsService.TogglePostLikeAsync(postLikeVM.PostId, loggedInUserId.Value);
 
-            return RedirectToAction("Index");
+            var post = await _postsService.GetPostByIdAsync(postLikeVM.PostId);
+            await _hubContext.Clients.User(post.UserId.ToString()).SendAsync("ReceiveNotification", "Someone liked your post");
+
+            if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
+            {
+                ViewData["ShowAllComment"] = false; // Match the main view's setting
+                return PartialView("Home/_Post", post);
+            }
+            else
+            {
+                return RedirectToAction("Index");
+            }
         }
 
+        //[HttpPost]
+        //public async Task<IActionResult> TogglePostFavorite(PostFavoriteVM postFavoriteVM)
+        //{
+        //    var loggedInUserId = GetUserId();
+        //    if (loggedInUserId == null) return RedirectToLogin();
+        //    await _postsService.TogglePostFavoriteAsync(postFavoriteVM.PostId, loggedInUserId.Value);
+
+        //    return RedirectToAction("Index");
+        //}
+
+
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> TogglePostFavorite(PostFavoriteVM postFavoriteVM)
         {
             var loggedInUserId = GetUserId();
             if (loggedInUserId == null) return RedirectToLogin();
             await _postsService.TogglePostFavoriteAsync(postFavoriteVM.PostId, loggedInUserId.Value);
 
-            return RedirectToAction("Index");
-        }
+            var post = await _postsService.GetPostByIdAsync(postFavoriteVM.PostId);
 
+            if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
+            {
+                ViewData["ShowAllComment"] = false; // Consistent with the main view
+                return PartialView("Home/_Post", post);
+            }
+            else
+            {
+                return RedirectToAction("Index");
+            }
+        }
 
         [HttpPost]
         public async Task<IActionResult> TogglePostVisibility(PostVisibilityVM postVisibilityVM)
@@ -104,14 +157,35 @@ namespace CircleApp.Controllers
             return RedirectToAction("Index");
         }
 
+        //[HttpPost]
+        //public async Task<IActionResult> AddPostComment(PostCommentVM postCommentVM)
+        //{
+        //    var loggedInUserId = GetUserId();
+        //    if (loggedInUserId == null) return RedirectToLogin();
+
+        //    //Creat a post object
+        //    var newComment = new Comment()
+        //    {
+        //        UserId = loggedInUserId.Value,
+        //        PostId = postCommentVM.PostId,
+        //        Content = postCommentVM.Content,
+        //        DateCreated = DateTime.UtcNow,
+        //        DateUpdated = DateTime.UtcNow
+        //    };
+
+        //    await _postsService.AddPostCommentAsync(newComment);
+
+        //    return RedirectToAction("Index");
+        //}
+
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> AddPostComment(PostCommentVM postCommentVM)
         {
             var loggedInUserId = GetUserId();
             if (loggedInUserId == null) return RedirectToLogin();
 
-            //Creat a post object
-            var newComment = new Comment()
+            var newComment = new Comment
             {
                 UserId = loggedInUserId.Value,
                 PostId = postCommentVM.PostId,
@@ -121,8 +195,17 @@ namespace CircleApp.Controllers
             };
 
             await _postsService.AddPostCommentAsync(newComment);
+            var post = await _postsService.GetPostByIdAsync(postCommentVM.PostId);
 
-            return RedirectToAction("Index");
+            if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
+            {
+                ViewData["ShowAllComment"] = false; // Match the main view’s default behavior
+                return PartialView("Home/_Post", post);
+            }
+            else
+            {
+                return RedirectToAction("Index");
+            }
         }
 
         [HttpPost]
@@ -136,11 +219,33 @@ namespace CircleApp.Controllers
             return RedirectToAction("Index");
         }
 
-        [HttpPost]
-        public async Task<IActionResult> RemovePostComment(RemoveCommentVM removeCommentVM)
-        {
-            await _postsService.RemovePostCommentAsync(removeCommentVM.CommentId);
+        //[HttpPost]
+        //public async Task<IActionResult> RemovePostComment(RemoveCommentVM removeCommentVM)
+        //{
+        //    await _postsService.RemovePostCommentAsync(removeCommentVM.CommentId);
 
+        //    return RedirectToAction("Index");
+        //}
+
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> RemovePostComment(int commentId)
+        {
+            // Remove the comment
+            var postId =  await _postsService.RemovePostCommentAsync(commentId);
+
+            // Fetch the updated post
+            var post = await _postsService.GetPostByIdAsync(postId);
+
+            // Check if this is an AJAX request
+            if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
+            {
+                ViewData["ShowAllComment"] = false; // Match the main view’s default behavior
+                return PartialView("Home/_Post", post); // Return the updated post partial view
+            }
+
+            // Fallback for non-AJAX requests
             return RedirectToAction("Index");
         }
 

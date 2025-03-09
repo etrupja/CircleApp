@@ -17,7 +17,7 @@ namespace CircleApp.Data.Services
         Task<Post> RemovePostAsync(int postId);
 
         Task AddPostCommentAsync(Comment comment);
-        Task RemovePostCommentAsync(int commentId);
+        Task<int> RemovePostCommentAsync(int commentId);
 
         Task TogglePostLikeAsync(int postId, int userId);
         Task TogglePostFavoriteAsync(int postId, int userId);

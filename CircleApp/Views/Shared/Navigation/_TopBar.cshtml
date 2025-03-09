@@ -22,14 +22,12 @@
                     <span class="ml-2">Circle App</span>
                 </a>
             </div>
-
         </div>
     </div>
     <div class="flex-1 relative">
         <div class="max-w-[1220px] mx-auto flex items-center">
             <form id="search--box"
                   class="xl:w-[680px] sm:w-96 sm:relative rounded-xl overflow-hidden z-20 bg-secondery max-md:hidden w-screen left-0 max-sm:fixed max-sm:top-2">
-
                 <ion-icon name="search" class="absolute left-4 top-1/2 -translate-y-1/2"></ion-icon>
                 <input type="text" name="query" placeholder="Search Posts, Friends..." class="w-full !pl-10 !font-normal !bg-transparent h-12 !text-sm" />
             </form>
@@ -37,38 +35,47 @@
 
         <div class="max-w-[1220px] mx-auto flex items-center">
             <div class="flex items-center sm:gap-4 gap-2 absolute right-5 top-1/2 -translate-y-1/2 text-black">
-
-                @* notification icon *@
-                <button type="button" class="sm:p-2 p-1 rounded-full relative sm:bg-secondery">
+                <!-- Notification Icon -->
+                @*<button type="button" id="notificationsBtn" class="sm:p-2 p-1 rounded-full relative sm:bg-secondery" uk-tooltip="title: Notification; pos: bottom; offset:6">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6 max-sm:hidden">
                         <path d="M5.85 3.5a.75.75 0 00-1.117-1 9.719 9.719 0 00-2.348 4.876.75.75 0 001.479.248A8.219 8.219 0 015.85 3.5zM19.267 2.5a.75.75 0 10-1.118 1 8.22 8.22 0 011.987 4.124.75.75 0 001.48-.248A9.72 9.72 0 0019.266 2.5z" />
                         <path fill-rule="evenodd" d="M12 2.25A6.75 6.75 0 005.25 9v.75a8.217 8.217 0 01-2.119 5.52.75.75 0 00.298 1.206c1.544.57 3.16.99 4.831 1.243a3.75 3.75 0 107.48 0 24.583 24.583 0 004.83-1.244.75.75 0 00.298-1.205 8.217 8.217 0 01-2.118-5.52V9A6.75 6.75 0 0012 2.25zM9.75 18c0-.034 0-.067.002-.1a25.05 25.05 0 004.496 0l.002.1a2.25 2.25 0 11-4.5 0z" clip-rule="evenodd" />
                     </svg>
                     <div class="absolute top-0 right-0 -m-1 bg-red-600 text-white text-xs px-1 rounded-full" id="notificationsCount">0</div>
+                </button>*@
+
+                <button type="button" id="notificationsBtn" class="sm:p-2 p-1 rounded-full relative sm:bg-secondery" uk-tooltip="title: Notification; pos: bottom; offset:6">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6 max-sm:hidden">
+                        <path d="M5.85 3.5a.75.75 0 00-1.117-1 9.719 9.719 0 00-2.348 4.876.75.75 0 001.479.248A8.219 8.219 0 015.85 3.5zM19.267 2.5a.75.75 0 10-1.118 1 8.22 8.22 0 011.987 4.124.75.75 0 001.48-.248A9.72 9.72 0 0019.266 2.5z" />
+                        <path fill-rule="evenodd" d="M12 2.25A6.75 6.75 0 005.25 9v.75a8.217 8.217 0 01-2.119 5.52.75.75 0 00.298 1.206c1.544.57 3.16.99 4.831 1.243a3.75 3.75 0 107.48 0 24.583 24.583 0 004.83-1.244.75.75 0 00.298-1.205 8.217 8.217 0 01-2.118-5.52V9A6.75 6.75 0 0012 2.25zM9.75 18c0-.034 0-.067.002-.1a25.05 25.05 0 004.496 0l.002.1a2.25 2.25 0 11-4.5 0z" clip-rule="evenodd" />
+                    </svg>
+                    <div class="absolute top-0 right-0 -m-1 bg-red-600 text-white text-xs px-1.5 rounded-full hidden" id="notificationsIndicator">NEW</div>
                 </button>
 
-                <div class="hidden bg-white pr-1.5 rounded-lg drop-shadow-xl md:w-[365px] w-screen border2" uk-drop="offset:6;pos: bottom-right; mode: click; animate-out: true;">
 
+                <!-- Notification Dropdown -->
+                <div class="hidden bg-white pr-1.5 rounded-lg drop-shadow-xl md:w-[365px] w-screen border2"
+                     uk-drop="offset:6;pos: bottom-right; mode: click; animate-out: true;">
                     <div class="flex items-center justify-between gap-2 p-4 pb-2">
                         <h3 class="font-bold text-xl">Notifications</h3>
                     </div>
-
                     <div class="text-sm h-[400px] w-full overflow-y-auto pr-2">
                         <div class="pl-2 p-1 text-sm font-normal" id="notification-dropdown">
                             No notifications...
                         </div>
                     </div>
-
+                    <div class="w-3 h-3 absolute -top-1.5 right-3 bg-white border-l border-t rotate-45 max-md:hidden"></div>
                 </div>
 
+                <!-- Profile Icon -->
                 <div class="rounded-full relative bg-secondery cursor-pointer shrink-0">
                     <img src="@(string.IsNullOrEmpty(profilePictureUrl) ? Url.Content("~/images/avatar/user.png") : Url.Content("~/"+profilePictureUrl))" class="sm:w-9 sm:h-9 w-7 h-7 rounded-full shadow shrink-0" />
                 </div>
+                <!-- Profile Dropdown -->
                 <div class="hidden bg-white rounded-lg drop-shadow-xl w-64 border2" uk-drop="offset:6;pos: bottom-right;animate-out: true;">
-
                     <a>
                         <div class="p-4 py-5 flex items-center gap-4">
-                            <img src="@(string.IsNullOrEmpty(profilePictureUrl) ? Url.Content("~/images/avatar/user.png") : Url.Content("~/"+profilePictureUrl))"" class="w-10 h-10 rounded-full shadow" />
+                            <img src="@(string.IsNullOrEmpty(profilePictureUrl) ? Url.Content("~/images/avatar/user.png") : Url.Content("~/"+profilePictureUrl))" class="w-10 h-10 rounded-full shadow" />
                             <div class="flex-1">
                                 <h4 class="text-sm font-medium text-black">@fullName</h4>
                                 <div class="text-sm mt-1 text-blue-600 font-light/70">@userName</div>
@@ -94,3 +101,98 @@
         </div>
     </div>
 </header>
+
+<!-- SignalR and jQuery Scripts -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/aspnet-signalr/1.0.27/signalr.min.js" integrity="sha512-a+73ErrZPjhqOu0qbW1QLsenEF4pvDjmnd+Ws6hkDyJlrwAigOQAxQhIT+fPNFWScUvtJQvn+G535TT2C6/G4g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+<!-- Client-Side Notification Logic -->
+<script>
+   $(document).ready(function () {
+    // Establish SignalR connection
+    const connection = new signalR.HubConnectionBuilder()
+        .withUrl("/notificationHub")
+        .build();
+
+    // Handle incoming notifications
+       connection.on("ReceiveNotification", function (message) {
+
+           console.log('message ====> ', message);
+
+        // Show the "NEW" indicator
+        $('#notificationsIndicator').removeClass('hidden');
+
+        // Refresh the notifications dropdown if it's open
+        if ($('#notification-dropdown').is(':visible')) {
+            $.ajax({
+                url: '@Url.Action("GetNotifications", "Friends")',
+                type: 'GET',
+                success: function (partialView) {
+                    $('#notification-dropdown').html(partialView);
+                }
+            });
+        }
+    });
+
+    // Start the SignalR connection
+    connection.start()
+        .then(() => console.log('SignalR Connected'))
+        .catch(err => console.error('SignalR Connection Error:', err.toString()));
+
+    // Fetch the initial notification count
+    $.ajax({
+        url: '@Url.Action("GetNotificationsCount", "Friends")',
+        type: 'GET',
+        success: function (response) {
+            if (response > 0) {
+                $('#notificationsIndicator').removeClass('hidden');
+            }
+        },
+        error: function (xhr, status, error) {
+            console.error('Error fetching notification count:', error);
+        }
+    });
+
+    // Load notifications when the notification button is clicked
+   $('#notificationsBtn').click(function () {
+    $.ajax({
+        url: '@Url.Action("GetNotifications", "Friends")',
+        type: 'GET',
+        success: function (partialView) {
+            $('#notification-dropdown').html(partialView);
+            $('#notificationsIndicator').hide();
+        },
+        error: function (xhr, status, error) {
+            console.error('Error fetching notifications:', error);
+        }
+    });
+});
+});
+// Mark notification as read
+function setNotificationAsRead(notificationId) {
+    $.ajax({
+        url: '@Url.Action("SetNotificationAsRead", "Friends")',
+        type: 'POST',
+        data: { notificationId: notificationId },
+        success: function (response) {
+            // Check if there are still unread notifications
+            if (response <= 0) {
+                $('#notificationsIndicator').addClass('hidden');
+            }
+
+            if ($('#notification-dropdown').is(':visible')) {
+                $.ajax({
+                    url: '@Url.Action("GetNotifications", "Friends")',
+                    type: 'GET',
+                    success: function (partialView) {
+                        $('#notification-dropdown').html(partialView);
+                    }
+                });
+            }
+        },
+        error: function (xhr, status, error) {
+            console.error('Error marking notification as read:', error);
+        }
+    });
+}
+</script>

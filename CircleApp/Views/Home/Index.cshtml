@@ -4,7 +4,7 @@
     <div class="lg:flex 2xl:gap-16 gap-12 max-w-[1065px] mx-auto" id="js-oversized">
         <div class="max-w-[680px] mx-auto">
 
-            @await Component.InvokeAsync("Stories") 
+            @await Component.InvokeAsync("Stories")
 
             <div class="md:max-w-[580px] mx-auto flex-1 xl:space-y-6 space-y-3">
 
@@ -26,25 +26,23 @@
 
                 </div>
 
-                @if (Model.Count == 0)
-                {
-                    <div class="bg-white rounded-xl shadow-sm md:p-4 p-2 space-y-4 text-sm font-medium border1" style="width: 580px;">
-                        Currently, there are no posts available. Would you like to create the first one?
-                    </div>
-                }
-                else
-                {
-                    @foreach (var post in Model)
+                <div id="posts-container">
+                    @if (Model.Count == 0)
                     {
-                        <partial name="Home/_Post" 
-                                 model="post" 
-                                 view-data='new ViewDataDictionary(ViewData) { { "ShowAllComment", false } }' 
-                                 />
+                        <div class="bg-white rounded-xl shadow-sm md:p-4 p-2 space-y-4 text-sm font-medium border1" style="width: 580px;">
+                            Currently, there are no posts available. Would you like to create the first one?
+                        </div>
                     }
-                }
-
-
-
+                    else
+                    {
+                        @foreach (var post in Model)
+                        {
+                            <partial name="Home/_Post"
+                                     model="post"
+                                     view-data='new ViewDataDictionary(ViewData) { { "ShowAllComment", false } }' />
+                        }
+                    }
+                </div>
             </div>
         </div>
         <div class="flex-1">
@@ -53,7 +51,7 @@
                     @await Component.InvokeAsync("SuggestedFriends")
                 </div>
                 <div class="box p-5 px-6 border1">
-                    @await Component.InvokeAsync("Hashtags") 
+                    @await Component.InvokeAsync("Hashtags")
                 </div>
             </div>
         </div>
@@ -70,4 +68,147 @@
         document.getElementById('deleteConfirmationPostId').value = postId;
         UIkit.modal('#postDeleteDialog').show();
     }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        document.getElementById('posts-container').addEventListener('click', function (event) {
+            if (event.target.closest('.like-button')) {
+                event.preventDefault();
+                var button = event.target.closest('.like-button');
+                var form = button.closest('form');
+                var postId = form.querySelector('input[name="postId"]').value;
+                var postContainer = document.getElementById('post-' + postId);
+
+                fetch(form.action, {
+                    method: 'POST',
+                    body: new FormData(form),
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest'
+                    }
+                })
+                    .then(response => response.text())
+                    .then(html => {
+                        postContainer.innerHTML = html;
+                    })
+                    .catch(error => console.error('Error:', error));
+            }
+        });
+
+        document.getElementById('posts-container').addEventListener('click', function (event) {
+            var button = event.target.closest('.favorite-button');
+            if (button) {
+                event.preventDefault();
+                var form = button.closest('form');
+                var postId = form.querySelector('input[name="postId"]').value;
+                var postContainer = document.getElementById('post-' + postId);
+
+                fetch(form.action, {
+                    method: 'POST',
+                    body: new FormData(form),
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest'
+                    }
+                })
+                    .then(response => response.text())
+                    .then(html => {
+                        postContainer.innerHTML = html;
+                    })
+                    .catch(error => console.error('Error:', error));
+            }
+        });
+
+        document.getElementById('posts-container').addEventListener('submit', function (event) {
+            var form = event.target;
+            if (form.classList.contains('add-comment-form')) {
+                event.preventDefault();
+                var postId = form.querySelector('input[name="postId"]').value;
+                var postContainer = document.getElementById('post-' + postId);
+
+                fetch(form.action, {
+                    method: 'POST',
+                    body: new FormData(form),
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest'
+                    }
+                })
+                    .then(response => {
+                        if (response.ok) {
+                            return response.text();
+                        } else {
+                            throw new Error('Failed to add comment');
+                        }
+                    })
+                    .then(html => {
+                        postContainer.innerHTML = html;
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        // Optionally, display an error message to the user
+                    });
+            }
+
+            // Handle comment removal
+                if (form.classList.contains('remove-comment-form')) {
+                    event.preventDefault(); // Stop the default form submission
+
+                    // Find the post container this comment belongs to
+                    var postContainer = form.closest('[id^="post-"]');
+                    if (postContainer) {
+                        fetch(form.action, {
+                            method: 'POST',
+                            body: new FormData(form),
+                            headers: {
+                                'X-Requested-With': 'XMLHttpRequest' // Indicate an AJAX request
+                            }
+                        })
+                        .then(response => {
+                            if (response.ok) {
+                                return response.text(); // Get the HTML from the response
+                            } else {
+                                throw new Error('Failed to remove comment');
+                            }
+                        })
+                        .then(html => {
+                            postContainer.innerHTML = html; // Update the post with the new content
+                        })
+                        .catch(error => {
+                            console.error('Error:', error); // Log any errors
+                        });
+                    }
+                }
+        });
+
+        document.getElementById('posts-container').addEventListener('submit', function (event) {
+            var form = event.target;
+
+            // Handle comment removal
+            if (form.classList.contains('remove-comment-form')) {
+                event.preventDefault(); // Stop the default form submission
+
+                // Find the post container this comment belongs to
+                var postContainer = form.closest('[id^="post-"]');
+                if (postContainer) {
+                    fetch(form.action, {
+                        method: 'POST',
+                        body: new FormData(form),
+                        headers: {
+                            'X-Requested-With': 'XMLHttpRequest' // Indicate an AJAX request
+                        }
+                    })
+                        .then(response => {
+                            if (response.ok) {
+                                return response.text(); // Get the HTML from the response
+                            } else {
+                                throw new Error('Failed to remove comment');
+                            }
+                        })
+                        .then(html => {
+                            postContainer.innerHTML = html; // Update the post with the new content
+                        })
+                        .catch(error => {
+                            console.error('Error:', error); // Log any errors
+                        });
+                }
+            }
+        });
+    });
 </script>

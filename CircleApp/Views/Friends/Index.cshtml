@@ -1,5 +1,114 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿@using System.Security.Claims
+@model FriendshipVM
+
 @{
+    ViewBag.Title = "Friends";
 }
+
+<!-- main contents -->
+<main id="site__main" class="2xl:ml-[--w-side] xl:ml-[--w-side-sm] py-10 p-2.5 h-[calc(100vh-var(--m-top))] mt-[--m-top]">
+
+    <div class="2xl:max-w-[1220px] max-w-[1065px] mx-auto">
+
+        @if (Model.Friends.Count > 0)
+        {
+            <div class="sm:my-6 my-3 flex items-center justify-between lg:mt-10">
+                <div>
+                    <h2 class="md:text-lg text-base font-semibold text-black"> My Friends </h2>
+                    <p class="font-normal text-sm text-gray-500 leading-6"> Your personal network of friends and acquaintances. Connect, share, and stay in touch with the people who matter to you. </p>
+                </div>
+            </div>
+
+            <div class="grid md:grid-cols-2 md:gap-2 gap-3">
+                @foreach (var friendship in Model.Friends)
+                {
+                    var friend = friendship.SenderId == int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)) ? friendship.Receiver : friendship.Sender;
+                    <div class="flex md:items-center space-x-4 p-4 rounded-md box">
+                        <div class="sm:w-20 w-14 sm:h-20 h-14 flex-shrink-0 rounded-lg relative">
+                            <img src="@(string.IsNullOrEmpty(friend.ProfilePictureUrl) ? Url.Content("~/images/avatar/user.png") : Url.Content(friend.ProfilePictureUrl))" class="absolute w-full h-full inset-0 rounded-md object-cover shadow-sm" alt="">
+                        </div>
+                        <div class="flex-1">
+                            <a href="timeline-group.html" class="md:text-lg text-base font-semibold capitalize text-black dark:text-white"> @friend.FullName </a>
+                        </div>
+
+                        <form asp-controller="Friends" asp-action="RemoveFriend" method="post">
+                            <input type="hidden" name="friendshipId" value="@friendship.Id" />
+                            <button type="submit" class="button bg-red-soft text-red gap-1 max-md:hidden" style="background-color: rgb(127 29 29); color: white">
+                                <ion-icon name="remove-circle-outline" class="text-xl -ml-1"></ion-icon> Remove
+                            </button>
+                        </form>
+                    </div>
+                }
+            </div>
+        }
+
+        @if (Model.FriendRequestsReceived.Count > 0)
+        {
+            <!-- Received Requests -->
+            <div class="sm:my-6 my-3 flex items-center justify-between lg:mt-10">
+                <div>
+                    <h2 class="md:text-lg text-base font-semibold text-black"> Received Requests </h2>
+                    <p class="font-normal text-sm text-gray-500 leading-6"> See who wants to connect with you! Review and respond to incoming friend requests to expand your circle. </p>
+                </div>
+            </div>
+
+            <div class="grid md:grid-cols-2 md:gap-2 gap-3">
+                @foreach (var request in Model.FriendRequestsReceived)
+                {
+                    <div class="flex md:items-center space-x-4 p-4 rounded-md box">
+                        <div class="sm:w-20 w-14 sm:h-20 h-14 flex-shrink-0 rounded-lg relative">
+                            <img src="@(string.IsNullOrEmpty(request.Sender.ProfilePictureUrl) ? Url.Content("~/images/avatar/user.png") : Url.Content(request.Sender.ProfilePictureUrl))" class="absolute w-full h-full inset-0 rounded-md object-cover shadow-sm" alt="">
+                        </div>
+                        <div class="flex-1">
+                            <a href="timeline-group.html" class="md:text-lg text-base font-semibold capitalize text-black dark:text-white"> @request.Sender.FullName </a>
+                        </div>
+                        <form asp-controller="Friends" asp-action="RejectRequest" method="post">
+                            <input type="hidden" name="requestId" value="@request.Id" />
+                            <button type="submit" class="button bg-red-soft text-red gap-1 max-md:hidden" style="background-color: rgb(127 29 29); color: white">
+                                <ion-icon name="remove-circle-outline" class="text-xl -ml-1"></ion-icon> Reject
+                            </button>
+                        </form>
+                        <form asp-controller="Friends" asp-action="AcceptRequest" method="post">
+                            <input type="hidden" name="requestId" value="@request.Id" />
+                            <button type="submit" class="button bg-primary-soft text-primary dark:text-white gap-1 max-md:hidden">
+                                <ion-icon name="checkbox-outline" class="text-xl -ml-1"></ion-icon> Accept
+                            </button>
+                        </form>
+                    </div>
+                }
+            </div>
+        }
+
+        @if (Model.FriendRequestsSent.Count > 0)
+        {
+            <!-- Pending Invitations -->
+            <div class="sm:my-6 my-3 flex items-center justify-between lg:mt-10">
+                <div>
+                    <h2 class="md:text-lg text-base font-semibold text-black"> Pending Invitations </h2>
+                    <p class="font-normal text-sm text-gray-500 leading-6"> Track the friend requests you’ve sent. See who hasn’t responded yet and manage your pending invitations </p>
+                </div>
+            </div>
+
+            <div class="grid md:grid-cols-2 md:gap-2 gap-3">
+                @foreach (var request in Model.FriendRequestsSent)
+                {
+                    <div class="flex md:items-center space-x-4 p-4 rounded-md box">
+                        <div class="sm:w-20 w-14 sm:h-20 h-14 flex-shrink-0 rounded-lg relative">
+                            <img src="@(string.IsNullOrEmpty(request.Receiver.ProfilePictureUrl) ? Url.Content("~/images/avatar/user.png") : Url.Content(request.Receiver.ProfilePictureUrl))" class="absolute w-full h-full inset-0 rounded-md object-cover shadow-sm" alt="">
+                        </div>
+                        <div class="flex-1">
+                            <a href="timeline-group.html" class="md:text-lg text-base font-semibold capitalize text-black dark:text-white"> @request.Receiver.FullName </a>
+                        </div>
+                        <form asp-controller="Friends" asp-action="CancelRequest" method="post">
+                            <input type="hidden" name="requestId" value="@request.Id" />
+                            <button type="submit" class="button text-primary dark:text-white gap-1 max-md:hidden">
+                                <ion-icon name="remove-circle-outline" class="text-xl -ml-1"></ion-icon> Cancel
+                            </button>
+                        </form>
+                    </div>
+                }
+            </div>
+        }
+
+    </div>
+</main>
