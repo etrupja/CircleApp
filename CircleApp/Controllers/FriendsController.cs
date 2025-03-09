@@ -24,7 +24,7 @@ namespace CircleApp.Controllers
                 FriendRequestSent = await _friendsService.GetSentFriendRequestAsync(userId.Value)
             };
 
-            return View();
+            return View(friendsData);
         }
 
         [HttpPost]
