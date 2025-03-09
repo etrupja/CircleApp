@@ -2,9 +2,11 @@ using CircleApp.Controllers.Base;
 using CircleApp.Data.Helpers.Enums;
 using CircleApp.Data.Models;
 using CircleApp.Data.Services;
+using CircleApp.Hubs;
 using CircleApp.ViewModels.Home;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 
 namespace CircleApp.Controllers
 {
@@ -15,16 +17,19 @@ namespace CircleApp.Controllers
         private readonly IPostsService _postsService;
         private readonly IHashtagsService _hashtagsService;
         private readonly IFilesService _filesService;
+        private readonly IHubContext<NotificationHub> _hubContext;
 
         public HomeController(ILogger<HomeController> logger, 
             IPostsService postsService,
             IHashtagsService hashtagsService,
-            IFilesService filesService)
+            IFilesService filesService,
+            IHubContext<NotificationHub> hubContext)
         {
             _logger = logger;
             _postsService = postsService;
             _hashtagsService = hashtagsService;
             _filesService = filesService;
+            _hubContext = hubContext;
         }
 
         
@@ -82,6 +87,11 @@ namespace CircleApp.Controllers
             await _postsService.TogglePostLikeAsync(postLikeVM.PostId, loggedInUserId.Value);
 
             var post = await _postsService.GetPostByIdAsync(postLikeVM.PostId);
+
+
+            await _hubContext.Clients.User(post.UserId.ToString())
+                .SendAsync("ReceiveNotification");
+
             return PartialView("Home/_Post", post);
         }
 
