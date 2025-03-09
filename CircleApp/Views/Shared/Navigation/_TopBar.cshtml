@@ -94,3 +94,25 @@
         </div>
     </div>
 </header>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/aspnet-signalr/1.0.27/signalr.min.js" integrity="sha512-a+73ErrZPjhqOu0qbW1QLsenEF4pvDjmnd+Ws6hkDyJlrwAigOQAxQhIT+fPNFWScUvtJQvn+G535TT2C6/G4g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+
+        //SignalR connection
+        const connection = new signalR.HubConnectionBuilder()
+            .withUrl("/notificationHub")
+            .build();
+
+        connection.on("ReceiveNotification", (message) => {
+            console.log("message ==> ", message);
+
+            document.getElementById("notificationsCount").innerHTML = "new";
+        });
+
+        connection.start()
+            .then(() => console.log("SignalR connected"))
+            .catch((err) => console.log("SignalR connection error: ", err))
+
+    })
+</script>
