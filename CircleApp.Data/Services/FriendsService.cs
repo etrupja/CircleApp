@@ -54,7 +54,7 @@ namespace CircleApp.Data.Services
             if (requestDb != null)
             {
                 requestDb.Status = newStatus;
-                requestDb.DateUpdated = DateTime.Now;
+                requestDb.DateUpdated = DateTime.UtcNow;
                 _context.Update(requestDb);
                 await _context.SaveChangesAsync();
             }
@@ -65,7 +65,7 @@ namespace CircleApp.Data.Services
                 {
                     SenderId = requestDb.SenderId,
                     ReceiverId = requestDb.ReceiverId,
-                    DateCreated = DateTime.Now
+                    DateCreated = DateTime.UtcNow
                 };
                 await _context.Friendships.AddAsync(friendship);
                 await _context.SaveChangesAsync();

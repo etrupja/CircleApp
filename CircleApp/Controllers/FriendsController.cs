@@ -46,5 +46,12 @@ namespace CircleApp.Controllers
             return RedirectToAction("Index");
         }
 
+        [HttpPost]
+        public async Task<IActionResult> AcceptFriendRequest(int requestId)
+        {
+            await _friendsService.UpdateRequestAsync(requestId, FriendshipStatus.Accepted);
+            return RedirectToAction("Index");
+        }
+
     }
 }

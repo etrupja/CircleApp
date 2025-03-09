@@ -34,7 +34,8 @@
                             </button>
                         </form>
 
-                        <form>
+                        <form asp-controller="Friends" asp-action="AcceptFriendRequest" method="post">
+                            <input type="hidden" name="requestId" value="@request.Id" />
                             <button type="submit" class="button bg-primary-soft text-primary gap-1 max-md:hidden">
                                 <ion-icon name="checkbox-outline" class="text-xl -ml-1"></ion-icon> Accept
                             </button>
