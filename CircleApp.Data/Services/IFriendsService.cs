@@ -16,5 +16,6 @@ namespace CircleApp.Data.Services
         Task<List<UserWithFriendsCountDto>> GetSuggestedFriendsAsync(int userId);
 
         Task<List<FriendRequest>> GetSentFriendRequestAsync(int userId);
+        Task<List<FriendRequest>> GetReceivedFriendRequestAsync(int userId);
     }
 }
