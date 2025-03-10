@@ -3,7 +3,7 @@ using CircleApp.Data;
 using CircleApp.Data.Helpers;
 using CircleApp.Data.Models;
 using CircleApp.Data.Services;
-using CircleApp.Hubs;
+using CircleApp.Data.Hubs;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
