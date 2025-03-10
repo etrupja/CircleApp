@@ -87,7 +87,7 @@ namespace CircleApp.Controllers
             var result = await _postsService.TogglePostLikeAsync(postLikeVM.PostId, userId.Value);
             var post = await _postsService.GetPostByIdAsync(postLikeVM.PostId);
 
-            if (result.SendNotification)
+            if (result.SendNotification && userId != post.UserId)
                 await _notificationsService.AddNewNotificationAsync(post.UserId, NotificationType.Like, userName, postLikeVM.PostId);
 
             return PartialView("Home/_Post", post);
@@ -96,14 +96,14 @@ namespace CircleApp.Controllers
         [HttpPost]
         public async Task<IActionResult> TogglePostFavorite(PostFavoriteVM postFavoriteVM)
         {
-            var loggedInUserId = GetUserId();
+            var userId = GetUserId();
             var userName = GetUserFullName();
-            if (loggedInUserId == null) return RedirectToLogin();
-            var result = await _postsService.TogglePostFavoriteAsync(postFavoriteVM.PostId, loggedInUserId.Value);
+            if (userId == null) return RedirectToLogin();
+            var result = await _postsService.TogglePostFavoriteAsync(postFavoriteVM.PostId, userId.Value);
 
             var post = await _postsService.GetPostByIdAsync(postFavoriteVM.PostId);
 
-            if (result.SendNotification)
+            if (result.SendNotification && userId != post.UserId)
                 await _notificationsService.AddNewNotificationAsync(post.UserId, NotificationType.Favorite, userName, postFavoriteVM.PostId);
 
 
@@ -125,15 +125,15 @@ namespace CircleApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> AddPostComment(PostCommentVM postCommentVM)
         {
-            var loggedInUserId = GetUserId();
+            var userId = GetUserId();
             var userName = GetUserFullName();
 
-            if (loggedInUserId == null) return RedirectToLogin();
+            if (userId == null) return RedirectToLogin();
 
             //Creat a post object
             var newComment = new Comment()
             {
-                UserId = loggedInUserId.Value,
+                UserId = userId.Value,
                 PostId = postCommentVM.PostId,
                 Content = postCommentVM.Content,
                 DateCreated = DateTime.UtcNow,
@@ -144,7 +144,8 @@ namespace CircleApp.Controllers
 
             var post = await _postsService.GetPostByIdAsync(postCommentVM.PostId);
 
-            await _notificationsService.AddNewNotificationAsync(post.UserId, NotificationType.Comment, userName, postCommentVM.PostId);
+            if (userId != post.UserId)
+                await _notificationsService.AddNewNotificationAsync(post.UserId, NotificationType.Comment, userName, postCommentVM.PostId);
 
             return PartialView("Home/_Post", post);
         }
