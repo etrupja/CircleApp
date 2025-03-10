@@ -47,8 +47,8 @@
                 </div>
 
                 <div class="flex gap-2">
-                    <a href="#" class="button flex-1 flex items-center gap-2 bg-primary text-white text-sm"> <ion-icon name="logo-google" class="text-lg"></ion-icon> google </a>
-                    <a href="#" class="button flex-1 flex items-center gap-2 bg-black text-white text-sm"><ion-icon name="logo-github" class="text-lg"></ion-icon> github </a>
+                    <a asp-controller="Authentication" asp-action="ExternalLogin" asp-route-provider="Google" class="button flex-1 flex items-center gap-2 bg-primary text-white text-sm"> <ion-icon name="logo-google" class="text-lg"></ion-icon> google </a>
+                    <a asp-controller="Authentication" asp-action="ExternalLogin" asp-route-provider="GitHub" class="button flex-1 flex items-center gap-2 bg-black text-white text-sm"><ion-icon name="logo-github" class="text-lg"></ion-icon> github </a>
                 </div>
             </form>
         </div>

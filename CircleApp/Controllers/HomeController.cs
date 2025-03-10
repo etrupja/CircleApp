@@ -1,40 +1,44 @@
-using CircleApp.Data;
-using CircleApp.Data.Helpers;
+using CircleApp.Controllers.Base;
 using CircleApp.Data.Helpers.Enums;
 using CircleApp.Data.Models;
 using CircleApp.Data.Services;
+using CircleApp.Hubs;
 using CircleApp.ViewModels.Home;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using System.Diagnostics;
+using Microsoft.AspNetCore.SignalR;
 
 namespace CircleApp.Controllers
 {
     [Authorize]
-    public class HomeController : Controller
+    public class HomeController : BaseController
     {
         private readonly ILogger<HomeController> _logger;
         private readonly IPostsService _postsService;
         private readonly IHashtagsService _hashtagsService;
         private readonly IFilesService _filesService;
+        private readonly IHubContext<NotificationHub> _hubContext;
 
         public HomeController(ILogger<HomeController> logger, 
             IPostsService postsService,
             IHashtagsService hashtagsService,
-            IFilesService filesService)
+            IFilesService filesService,
+            IHubContext<NotificationHub> hubContext)
         {
             _logger = logger;
             _postsService = postsService;
             _hashtagsService = hashtagsService;
             _filesService = filesService;
+            _hubContext = hubContext;
         }
 
         
         public async Task<IActionResult> Index()
         {
-            int loggedInUserId = 1;
-            var allPosts = await _postsService.GetAllPostsAsync(loggedInUserId);
+            var loggedInUserId = GetUserId();
+            if (loggedInUserId == null) return RedirectToLogin();
+
+            var allPosts = await _postsService.GetAllPostsAsync(loggedInUserId.Value);
 
             return View(allPosts);
         }
@@ -49,8 +53,8 @@ namespace CircleApp.Controllers
         [HttpPost]
         public async Task<IActionResult> CreatePost(PostVM post)
         {
-            //Get the logged in user
-            int loggedInUser = 1;
+            var loggedInUserId = GetUserId();
+            if (loggedInUserId == null) return RedirectToLogin();
 
             var imageUploadPath = await _filesService.UploadImageAsync(post.Image, ImageFileType.PostImage);
 
@@ -62,7 +66,7 @@ namespace CircleApp.Controllers
                 DateUpdated = DateTime.UtcNow,
                 ImageUrl = imageUploadPath,
                 NrOfReports = 0,
-                UserId = loggedInUser
+                UserId = loggedInUserId.Value
             };
 
             await _postsService.CreatePostAsync(newPost);
@@ -74,42 +78,56 @@ namespace CircleApp.Controllers
 
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> TogglePostLike(PostLikeVM postLikeVM)
         {
-            int loggedInUserId = 1;
-            await _postsService.TogglePostLikeAsync(postLikeVM.PostId, loggedInUserId);
+            var loggedInUserId = GetUserId();
+            if (loggedInUserId == null) return RedirectToLogin();
 
-            return RedirectToAction("Index");
+            await _postsService.TogglePostLikeAsync(postLikeVM.PostId, loggedInUserId.Value);
+
+            var post = await _postsService.GetPostByIdAsync(postLikeVM.PostId);
+
+
+            await _hubContext.Clients.User(post.UserId.ToString())
+                .SendAsync("ReceiveNotification", "new");
+
+            return PartialView("Home/_Post", post);
         }
 
         [HttpPost]
         public async Task<IActionResult> TogglePostFavorite(PostFavoriteVM postFavoriteVM)
         {
-            int loggedInUserId = 1;
-            await _postsService.TogglePostFavoriteAsync(postFavoriteVM.PostId, loggedInUserId);
+            var loggedInUserId = GetUserId();
+            if (loggedInUserId == null) return RedirectToLogin();
+            await _postsService.TogglePostFavoriteAsync(postFavoriteVM.PostId, loggedInUserId.Value);
 
-            return RedirectToAction("Index");
+            var post = await _postsService.GetPostByIdAsync(postFavoriteVM.PostId);
+            return PartialView("Home/_Post", post);
         }
 
 
         [HttpPost]
         public async Task<IActionResult> TogglePostVisibility(PostVisibilityVM postVisibilityVM)
         {
-            int loggedInUserId = 1;
-            await _postsService.TogglePostVisibilityAsync(postVisibilityVM.PostId, loggedInUserId);
+            var loggedInUserId = GetUserId();
+            if (loggedInUserId == null) return RedirectToLogin();
+            await _postsService.TogglePostVisibilityAsync(postVisibilityVM.PostId, loggedInUserId.Value);
 
             return RedirectToAction("Index");
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> AddPostComment(PostCommentVM postCommentVM)
         {
-            int loggedInUserId = 1;
+            var loggedInUserId = GetUserId();
+            if (loggedInUserId == null) return RedirectToLogin();
 
             //Creat a post object
             var newComment = new Comment()
             {
-                UserId = loggedInUserId,
+                UserId = loggedInUserId.Value,
                 PostId = postCommentVM.PostId,
                 Content = postCommentVM.Content,
                 DateCreated = DateTime.UtcNow,
@@ -118,24 +136,29 @@ namespace CircleApp.Controllers
 
             await _postsService.AddPostCommentAsync(newComment);
 
-            return RedirectToAction("Index");
+            var post = await _postsService.GetPostByIdAsync(postCommentVM.PostId);
+            return PartialView("Home/_Post", post);
         }
 
         [HttpPost]
         public async Task<IActionResult> AddPostReport(PostReportVM postReportVM)
         {
-            int loggedInUserId = 1;
-            await _postsService.ReportPostAsync(postReportVM.PostId, loggedInUserId);
+            var loggedInUserId = GetUserId();
+            if (loggedInUserId == null) return RedirectToLogin();
+
+            await _postsService.ReportPostAsync(postReportVM.PostId, loggedInUserId.Value);
 
             return RedirectToAction("Index");
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> RemovePostComment(RemoveCommentVM removeCommentVM)
         {
             await _postsService.RemovePostCommentAsync(removeCommentVM.CommentId);
 
-            return RedirectToAction("Index");
+            var post = await _postsService.GetPostByIdAsync(removeCommentVM.PostId);
+            return PartialView("Home/_Post", post);
         }
 
         [HttpPost]

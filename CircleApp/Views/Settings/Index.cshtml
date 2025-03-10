@@ -11,7 +11,7 @@
                 <form id="updateProfilePictureForm" class="flex items-center gap-4 w-full" asp-controller="Settings" asp-action="UpdateProfilePicture" enctype="multipart/form-data">
                     <div class="relative w-12 h-12 shrink-0">
                         <label for="imageUpload" class="cursor-pointer">
-                            <img id="imagePreview" src="@(Model.ProfilePictureUrl ?? "~/images/avatar/user.png")" class="object-cover w-full h-full rounded-full" alt="Profile Picture Placeholder" />
+                            <img id="imagePreview" src="@(!string.IsNullOrEmpty(Model.ProfilePictureUrl) ? Model.ProfilePictureUrl : Url.Content("~/images/avatar/user.png"))" class="object-cover w-full h-full rounded-full" alt="Profile Picture Placeholder" />
                             <input type="file" id="imageUpload" name="ProfilePictureImage" class="hidden" accept="image/png, image/jpeg" />
                         </label>
 
@@ -24,7 +24,7 @@
                     </div>
                     <div>
                         <h3 class="text-base font-semibold text-black">@Model.FullName</h3>
-                        <p class="text-sm text-blue-600 mt-1 font-normal">@@ervistrupja </p>
+                        <p class="text-sm text-blue-600 mt-1 font-normal">@Model.UserName </p>
                     </div>
                     <button type="submit" id="saveButton" class="hidden button bg-blue-500 text-white px-4 py-1 rounded ml-auto">Save</button>
 
@@ -58,19 +58,19 @@
                             <div class="flex items-center gap-10">
                                 <label class="w-32 text-right">Full name</label>
                                 <div class="flex-1">
-                                    <input type="text" name="fullName" placeholder="Enter your full name"  class="w-full" />
+                                    <input value="@Model.FullName" type="text" name="fullName" placeholder="Enter your full name"  class="w-full" />
                                 </div>
                             </div>
                             <div class="flex items-center gap-10">
                                 <label class="w-32 text-right">Username</label>
                                 <div class="flex-1">
-                                    <input type="text" name="username" placeholder="Enter your username" class="w-full" />
+                                    <input value="@Model.UserName" type="text" name="username" placeholder="Enter your username" class="w-full" />
                                 </div>
                             </div>
                             <div class="flex items-center gap-10">
                                 <label class="w-32 text-right">Bio</label>
                                 <div class="flex-1">
-                                    <textarea class="w-full" name="bio" rows="5" placeholder="Enter your bio"></textarea>
+                                    <textarea class="w-full" name="bio" rows="5" placeholder="Enter your bio">@Model.Bio</textarea>
                                 </div>
                             </div>
                             <div class="flex items-center gap-4 mt-16 pl-[10.5rem]">

@@ -12,9 +12,11 @@ namespace CircleApp.Data.Services
     public class PostsService:IPostsService
     {
         private readonly AppDbContext _context;
-        public PostsService(AppDbContext context) 
+        private readonly INotificationsService _notificationService;
+        public PostsService(AppDbContext context, INotificationsService notificationService) 
         {
             _context = context;
+            _notificationService = notificationService;
         }
 
         public async Task<List<Post>> GetAllPostsAsync(int loggedInUserId)
@@ -162,6 +164,9 @@ namespace CircleApp.Data.Services
                 };
                 await _context.Likes.AddAsync(newLike);
                 await _context.SaveChangesAsync();
+
+                //add notification to db
+                await _notificationService.AddNewNotificationAsync(userId, "Someone liked your post", "Like");
             }
         }
 
