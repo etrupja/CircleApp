@@ -80,6 +80,7 @@ namespace CircleApp.Controllers
         public async Task<IActionResult> TogglePostLike(PostLikeVM postLikeVM)
         {
             var userId = GetUserId();
+            var userName = GetUserFullName();
             if (userId == null) return RedirectToLogin();
 
             var result = await _postsService.TogglePostLikeAsync(postLikeVM.PostId, userId.Value);
