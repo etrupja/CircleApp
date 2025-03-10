@@ -99,6 +99,21 @@
 <script>
     document.addEventListener("DOMContentLoaded", () => {
 
+        fetch("Notifications/GetCount", {
+            method: 'GET',
+            headers: {
+                'Content-Type':'application/json'
+            }
+        })
+            .then(response => response.json())
+            .then(data => {
+                console.log("notifications count = ", data);
+                document.getElementById("notificationsCount").innerHTML = data;
+            })
+            .catch(error => {
+                console.error("Error fetching notification count: ", error);
+            })
+
         //SignalR connection
         const connection = new signalR.HubConnectionBuilder()
             .withUrl("/notificationHub")

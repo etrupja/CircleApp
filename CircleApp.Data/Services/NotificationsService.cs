@@ -1,9 +1,5 @@
 ﻿using CircleApp.Data.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 
 namespace CircleApp.Data.Services
 {
@@ -29,6 +25,15 @@ namespace CircleApp.Data.Services
 
             await _context.Notifications.AddAsync(newNotification);
             await _context.SaveChangesAsync();
+        }
+    
+        public async Task<int> GetUnreadNotificationsCountAsync(int userId)
+        {
+            var count = await _context.Notifications
+                .Where(n => n.UserId == userId && !n.IsRead)
+                .CountAsync();
+
+            return count;
         }
     }
 }
