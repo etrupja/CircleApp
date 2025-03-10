@@ -1,0 +1,14 @@
+﻿@model List<Notification>
+
+@foreach (var notification in @Model)
+{
+    <div class="relative flex items-center gap-3 p-2 duration-200 rounded-xl pr-10 hover:bg-secondery">
+        <div class="flex-1">
+            <p>
+                <b class="font-bold mr1">
+                    @notification.Message
+                </b>
+            </p>
+        </div>
+    </div>
+}
