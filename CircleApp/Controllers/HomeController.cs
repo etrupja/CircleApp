@@ -1,4 +1,5 @@
 using CircleApp.Controllers.Base;
+using CircleApp.Data.Helpers.Constants;
 using CircleApp.Data.Helpers.Enums;
 using CircleApp.Data.Models;
 using CircleApp.Data.Services;
@@ -84,11 +85,10 @@ namespace CircleApp.Controllers
             if (userId == null) return RedirectToLogin();
 
             var result = await _postsService.TogglePostLikeAsync(postLikeVM.PostId, userId.Value);
-            
-            //if(result.SendNotification)
-            //    await _notificationsService.AddNewNotificationAsync(userId.Value, "Liked", "Like");
-
             var post = await _postsService.GetPostByIdAsync(postLikeVM.PostId);
+
+            if (result.SendNotification)
+                await _notificationsService.AddNewNotificationAsync(post.UserId, NotificationType.Like, userName, postLikeVM.PostId);
 
             return PartialView("Home/_Post", post);
         }
@@ -97,10 +97,16 @@ namespace CircleApp.Controllers
         public async Task<IActionResult> TogglePostFavorite(PostFavoriteVM postFavoriteVM)
         {
             var loggedInUserId = GetUserId();
+            var userName = GetUserFullName();
             if (loggedInUserId == null) return RedirectToLogin();
-            await _postsService.TogglePostFavoriteAsync(postFavoriteVM.PostId, loggedInUserId.Value);
+            var result = await _postsService.TogglePostFavoriteAsync(postFavoriteVM.PostId, loggedInUserId.Value);
 
             var post = await _postsService.GetPostByIdAsync(postFavoriteVM.PostId);
+
+            if (result.SendNotification)
+                await _notificationsService.AddNewNotificationAsync(post.UserId, NotificationType.Favorite, userName, postFavoriteVM.PostId);
+
+
             return PartialView("Home/_Post", post);
         }
 
@@ -120,6 +126,8 @@ namespace CircleApp.Controllers
         public async Task<IActionResult> AddPostComment(PostCommentVM postCommentVM)
         {
             var loggedInUserId = GetUserId();
+            var userName = GetUserFullName();
+
             if (loggedInUserId == null) return RedirectToLogin();
 
             //Creat a post object
@@ -135,6 +143,9 @@ namespace CircleApp.Controllers
             await _postsService.AddPostCommentAsync(newComment);
 
             var post = await _postsService.GetPostByIdAsync(postCommentVM.PostId);
+
+            await _notificationsService.AddNewNotificationAsync(post.UserId, NotificationType.Comment, userName, postCommentVM.PostId);
+
             return PartialView("Home/_Post", post);
         }
 

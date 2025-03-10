@@ -119,8 +119,14 @@ namespace CircleApp.Data.Services
             await _context.SaveChangesAsync();
         }
 
-        public async Task TogglePostFavoriteAsync(int postId, int userId)
+        public async Task<GetNotificationDto> TogglePostFavoriteAsync(int postId, int userId)
         {
+            var response = new GetNotificationDto()
+            {
+                Success = true,
+                SendNotification = false
+            };
+
             //check if user has already favorited the post
             var favorite = await _context.Favorites
                 .Where(l => l.PostId == postId && l.UserId == userId)
@@ -141,14 +147,18 @@ namespace CircleApp.Data.Services
                 };
                 await _context.Favorites.AddAsync(newFavorite);
                 await _context.SaveChangesAsync();
+
+                response.SendNotification = true;
             }
+
+            return response;
         }
 
         public async Task<GetNotificationDto> TogglePostLikeAsync(int postId, int userId)
         {
             var response = new GetNotificationDto()
             {
-                Success = false,
+                Success = true,
                 SendNotification = false
             };
 
@@ -175,9 +185,6 @@ namespace CircleApp.Data.Services
 
                 response.SendNotification = true;
             }
-
-            response.Success = true;
-
             return response;
         }
 
