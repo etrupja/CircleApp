@@ -1,4 +1,5 @@
-﻿using CircleApp.Data.Hubs;
+﻿using CircleApp.Data.Helpers.Constants;
+using CircleApp.Data.Hubs;
 using CircleApp.Data.Models;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
@@ -15,14 +16,15 @@ namespace CircleApp.Data.Services
             _hubContext = hubContext;
         }
 
-        public async Task AddNewNotificationAsync(int userId, string message, string notificationType)
+        public async Task AddNewNotificationAsync(int userId, string notificationType, string userFullName, int? postId)
         {
             var newNotification = new Notification()
             {
                 UserId = userId,
-                Message = message,
+                Message = GetPostMessage(notificationType, userFullName),
                 Type = notificationType,
                 IsRead = false,
+                PostId = postId,
                 DateCreated = DateTime.UtcNow,
                 DateUpdated = DateTime.UtcNow
             };
@@ -44,6 +46,40 @@ namespace CircleApp.Data.Services
                 .CountAsync();
 
             return count;
+        }
+
+        private string GetPostMessage(string notificationType, string userFullName)
+        {
+            var message = "";
+
+            switch (notificationType)
+            {
+                case NotificationType.Like:
+                    message = $"{userFullName} liked your post";
+                    break;
+
+                case NotificationType.Favorite:
+                    message = $"{userFullName} favorited your post";
+                    break;
+
+                case NotificationType.Comment:
+                    message = $"{userFullName} added a coment to your post";
+                    break;
+
+                case NotificationType.FriendRequest:
+                    message = $"{userFullName} added you as friend";
+                    break;
+
+                case NotificationType.FriendRequestApproved:
+                    message = $"{userFullName} approved your friendship request";
+                    break;
+
+                default:
+                    message = "";
+                    break;
+            }
+
+            return message;
         }
     }
 }
