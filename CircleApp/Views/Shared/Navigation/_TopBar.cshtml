@@ -139,4 +139,19 @@
             .catch((err) => console.log("SignalR connection error: ", err))
 
     })
+
+    function setNotificationAsRead(notificationId) {
+        console.log('Mark as read => notification => ', notificationId);
+
+        fetch(`Notifications/SetNotificationAsRead?notificationId=${notificationId}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+            .then(resp => resp.text())
+            .then(html => {
+                document.getElementById('notification-dropdown').innerHTML = html;
+            })
+    }
 </script>

@@ -1,4 +1,5 @@
 ﻿using CircleApp.Controllers.Base;
+using CircleApp.Data.Models;
 using CircleApp.Data.Services;
 using Microsoft.AspNetCore.Mvc;
 
@@ -31,6 +32,18 @@ namespace CircleApp.Controllers
         {
             var userId = GetUserId();
             if (!userId.HasValue) RedirectToLogin();
+
+            var notifications = await _notificationsService.GetNotifications(userId.Value);
+            return PartialView("Notifications/_Notifications", notifications);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> SetNotificationAsRead(int notificationId)
+        {
+            var userId = GetUserId();
+            if (!userId.HasValue) RedirectToLogin();
+
+            await _notificationsService.SetNotificationAsReadAsync(notificationId);
 
             var notifications = await _notificationsService.GetNotifications(userId.Value);
             return PartialView("Notifications/_Notifications", notifications);
