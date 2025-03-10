@@ -2,6 +2,15 @@
 
 @foreach (var notification in @Model)
 {
+    TimeSpan time = DateTime.UtcNow.Subtract(notification.DateCreated);
+    string displayTxt = time switch
+    {
+        var t when t.TotalDays >= 1 => $"{(int)t.TotalDays}d ago",
+        var t when t.TotalHours >= 1 => $"{(int)t.TotalHours}h ago",
+        var t when t.TotalMinutes >= 1 => $"{(int)t.TotalMinutes}m ago",
+        _ => "Just now"
+    };
+
     <div class="relative flex items-center gap-3 p-2 duration-200 rounded-xl pr-10 hover:bg-secondery">
         <div class="flex-1">
             <p>
@@ -9,6 +18,7 @@
                     @notification.Message
                 </b>
             </p>
+            <div class="text-xs text-gray-500 mt-1.5">@displayTxt</div>
         </div>
     </div>
 }
