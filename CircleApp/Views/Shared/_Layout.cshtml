@@ -17,10 +17,11 @@
         @if (User.Identity.IsAuthenticated)
         {
             @* Topbar *@
-            <partial name="Navigation/_TopBar" />
+            @*<partial name="Navigation/_TopBar" />*@
+            <partial name="Navigation/_AdminTopBar" />
 
             @* Side bar (left) *@
-            <partial name="Navigation/_SideBar" />
+            @*<partial name="Navigation/_SideBar" />*@
         }
 
         @RenderBody()
