@@ -17,7 +17,8 @@
         @if (User.Identity.IsAuthenticated)
         {
             @* Topbar *@
-            <partial name="Navigation/_TopBar" />
+            @*<partial name="Navigation/_TopBar" />*@
+            <partial name="Navigation/_TopBarAdmin" />
 
             @* Side bar (left) *@
             <partial name="Navigation/_SideBar" />
