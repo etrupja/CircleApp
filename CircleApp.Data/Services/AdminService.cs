@@ -24,6 +24,7 @@ namespace CircleApp.Data.Services
             //    .ToListAsync();
 
             var posts = await _context.Posts
+                .Include(n => n.User)
                 .Where(n => n.NrOfReports > 5 && !n.IsDeleted)
                 .ToListAsync();
 
