@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CircleApp.Data.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,5 +9,6 @@ namespace CircleApp.Data.Services
 {
     public interface IAdminService
     {
+        Task<List<Post>> GetReportedPostsAsync();
     }
 }

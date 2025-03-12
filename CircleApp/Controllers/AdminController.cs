@@ -1,5 +1,6 @@
 ﻿using CircleApp.Data.Services;
 using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
 
 namespace CircleApp.Controllers
 {
@@ -11,9 +12,10 @@ namespace CircleApp.Controllers
             _adminService = adminService;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            return View();
+            var reportedPosts = await _adminService.GetReportedPostsAsync();
+            return View(reportedPosts);
         }
     }
 }
