@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.SignalR;
 
 namespace CircleApp.Controllers
 {
-    [Authorize]
+    [Authorize(Roles = AppRoles.User)]
     public class HomeController : BaseController
     {
         private readonly ILogger<HomeController> _logger;

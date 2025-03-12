@@ -1,10 +1,13 @@
 ﻿using CircleApp.Controllers.Base;
+using CircleApp.Data.Helpers.Constants;
 using CircleApp.Data.Models;
 using CircleApp.Data.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CircleApp.Controllers
 {
+    [Authorize(Roles = AppRoles.User)]
     public class NotificationsController : BaseController
     {
         private readonly INotificationsService _notificationsService;

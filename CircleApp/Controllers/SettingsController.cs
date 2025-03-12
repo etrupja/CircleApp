@@ -1,4 +1,5 @@
 ﻿using CircleApp.Controllers.Base;
+using CircleApp.Data.Helpers.Constants;
 using CircleApp.Data.Models;
 using CircleApp.Data.Services;
 using CircleApp.ViewModels.Settings;
@@ -9,7 +10,7 @@ using System.Security.Claims;
 
 namespace CircleApp.Controllers
 {
-    [Authorize]
+    [Authorize(Roles = $"{AppRoles.User},{AppRoles.Admin}")]
     public class SettingsController : BaseController
     {
         private readonly IUsersService _usersService;

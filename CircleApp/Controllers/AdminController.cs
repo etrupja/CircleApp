@@ -1,9 +1,12 @@
-﻿using CircleApp.Data.Services;
+﻿using CircleApp.Data.Helpers.Constants;
+using CircleApp.Data.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 
 namespace CircleApp.Controllers
 {
+    [Authorize(Roles = AppRoles.Admin)]
     public class AdminController : Controller
     {
         private readonly IAdminService _adminService;

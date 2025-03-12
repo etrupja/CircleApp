@@ -2,10 +2,12 @@
 using CircleApp.Data.Helpers.Constants;
 using CircleApp.Data.Services;
 using CircleApp.ViewModels.Friends;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CircleApp.Controllers
 {
+    [Authorize(Roles = AppRoles.User)]
     public class FriendsController : BaseController
     {
         private readonly IFriendsService _friendsService;
