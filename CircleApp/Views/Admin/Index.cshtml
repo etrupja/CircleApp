@@ -38,8 +38,9 @@
                         </div>
 
                         <div class="flex -mr-1 space-x-2">
-                            <form class="inline">
-                                <button class="button-icon w-8 h-8 text-red-500 hover:text-red-700">
+                            <form asp-controller="Admin" asp-action="RejectReport" class="inline">
+                                <input type="hidden" name="postId" value="@post.Id" />
+                                <button type="submit" class="button-icon w-8 h-8 text-red-500 hover:text-red-700">
                                     <ion-icon class="text-xl" name="close-outline"></ion-icon>
                                 </button>
                             </form>
