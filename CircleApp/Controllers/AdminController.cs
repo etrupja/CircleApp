@@ -20,5 +20,12 @@ namespace CircleApp.Controllers
             var reportedPosts = await _adminService.GetReportedPostsAsync();
             return View(reportedPosts);
         }
+
+        [HttpPost]
+        public async Task<IActionResult> ApproveReport(int postId)
+        {
+            await _adminService.ApproveReportAsync(postId);
+            return RedirectToAction("Index");
+        }
     }
 }

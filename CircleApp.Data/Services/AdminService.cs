@@ -30,5 +30,17 @@ namespace CircleApp.Data.Services
 
             return posts;
         }
+
+        public async Task ApproveReportAsync(int postId)
+        {
+            var postDb = await _context.Posts.FirstOrDefaultAsync(n => n.Id == postId);
+
+            if(postDb != null)
+            {
+                postDb.IsDeleted = true;
+                _context.Posts.Update(postDb);
+                await _context.SaveChangesAsync();
+            }
+        }
     }
 }

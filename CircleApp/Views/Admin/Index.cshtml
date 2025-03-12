@@ -44,8 +44,9 @@
                                 </button>
                             </form>
 
-                            <form class="inline">
-                                <button class="button-icon w-8 h-8 text-green-500 hover:text-green-700">
+                            <form asp-controller="Admin" asp-action="ApproveReport" class="inline">
+                                <input type="hidden" name="postId" value="@post.Id" />
+                                <button type="submit" class="button-icon w-8 h-8 text-green-500 hover:text-green-700">
                                     <ion-icon class="text-xl" name="checkmark-outline"></ion-icon>
                                 </button>
                             </form>

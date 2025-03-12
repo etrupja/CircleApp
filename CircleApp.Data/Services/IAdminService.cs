@@ -10,5 +10,6 @@ namespace CircleApp.Data.Services
     public interface IAdminService
     {
         Task<List<Post>> GetReportedPostsAsync();
+        Task ApproveReportAsync(int postId);
     }
 }
