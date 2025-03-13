@@ -27,7 +27,7 @@ namespace CircleApp.Data.Helpers
             }
 
             //Users with Roles
-            if (!userManager.Users.Any(n => !string.IsNullOrEmpty(n.Email)))
+            if (!userManager.Users.Any())
             {
                 var userPassword = "Coding@1234?";
                 var newUser = new User()
