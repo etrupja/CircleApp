@@ -8,7 +8,7 @@
     {
         <div class="side-list-item">
             <a asp-controller="Users" asp-action="Details" asp-route-userId="1">
-                <img src="@(string.IsNullOrEmpty(user.ProfilePictureUrl) ? Url.Content("~/images/avatar/user.png") : Url.Content("~/"+user.ProfilePictureUrl))" class="side-list-image rounded-full" />
+                <img src="@(string.IsNullOrEmpty(user.ProfilePictureUrl) ? Url.Content("~/images/avatar/user.png") : user.ProfilePictureUrl)" class="side-list-image rounded-full" />
             </a>
             <div class="flex-1">
                 <a>

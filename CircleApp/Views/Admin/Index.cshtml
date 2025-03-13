@@ -2,9 +2,6 @@
 
 <main id="site__main" class="p-2.5 h-[calc(100vh-var(--m-top))] mt-[--m-top]">
 
-    @*<h3>Reported posts</h3>
-    <hr />*@
-
     <div class="w-full">
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 w-[90%] mx-auto">
 
@@ -26,7 +23,7 @@
                     <div class="flex gap-3 sm:p-4 p-2.5 text-sm font-medium">
                         <a>
                             <img src="@(!string.IsNullOrEmpty(post.User.ProfilePictureUrl) ?
-        Url.Content("~/"+post.User.ProfilePictureUrl) :
+        post.User.ProfilePictureUrl :
         Url.Content("~/images/avatar/user.png"))" class="w-9 h-9 rounded-full" />
                         </a>
 
@@ -68,7 +65,7 @@
                     {
                         <a>
                             <div class="relative w-full h-full">
-                                <img src="@Url.Content("~/"+post.ImageUrl)" class="sm:rounded-lg w-full h-full object-cover rounded-b-xl" />
+                                <img src="@post.ImageUrl" class="sm:rounded-lg w-full h-full object-cover rounded-b-xl" />
                             </div>
                         </a>
                     }
