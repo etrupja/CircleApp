@@ -26,6 +26,7 @@ namespace CircleApp.Data.Helpers
                 }
             }
 
+
             //Users with Roles
             if (!userManager.Users.Any())
             {
