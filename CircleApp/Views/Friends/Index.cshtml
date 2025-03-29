@@ -25,7 +25,7 @@
 
                         <div class="w-14 h-14 flex-shrink-0 rounded-lg relative">
                             <img src="@(string.IsNullOrEmpty(friend.ProfilePictureUrl) ? Url.Content("~/images/avatar/user.png") :
-             Url.Content(friend.ProfilePictureUrl))"
+             friend.ProfilePictureUrl)"
                                  class="absolute w-full h-full inset-0 rounded-md object-cover shadow-sm" />
                         </div>
 
@@ -60,7 +60,7 @@
 
                         <div class="w-14 h-14 flex-shrink-0 rounded-lg relative">
                             <img src="@(string.IsNullOrEmpty(request.Sender.ProfilePictureUrl) ? Url.Content("~/images/avatar/user.png") :
-                     Url.Content(request.Sender.ProfilePictureUrl))"
+                     request.Sender.ProfilePictureUrl)"
                                  class="absolute w-full h-full inset-0 rounded-md object-cover shadow-sm" />
                         </div>
 
@@ -78,7 +78,7 @@
 
                         <form asp-controller="Friends" asp-action="UpdateFriendRequest" method="post">
                             <input type="hidden" name="requestId" value="@request.Id" />
-                            <input type="hidden" name="requestId" value="@FriendshipStatus.Accepted" />
+                            <input type="hidden" name="status" value="@FriendshipStatus.Accepted" />
                             <button type="submit" class="button bg-primary-soft text-primary gap-1 max-md:hidden">
                                 <ion-icon name="checkbox-outline" class="text-xl -ml-1"></ion-icon> Accept
                             </button>
@@ -105,7 +105,7 @@
 
                         <div class="w-14 h-14 flex-shrink-0 rounded-lg relative">
                             <img src="@(string.IsNullOrEmpty(request.Receiver.ProfilePictureUrl) ? Url.Content("~/images/avatar/user.png") :
-                            Url.Content(request.Receiver.ProfilePictureUrl))"
+                            request.Receiver.ProfilePictureUrl)"
                                  class="absolute w-full h-full inset-0 rounded-md object-cover shadow-sm" />
                         </div>
 

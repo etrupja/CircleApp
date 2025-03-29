@@ -3,7 +3,7 @@ using CircleApp.Data;
 using CircleApp.Data.Helpers;
 using CircleApp.Data.Models;
 using CircleApp.Data.Services;
-using CircleApp.Hubs;
+using CircleApp.Data.Hubs;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -17,15 +17,17 @@ builder.Services.AddControllersWithViews();
 var dbConnectionString = builder.Configuration.GetConnectionString("Default");
 builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlServer(dbConnectionString));
 
+var blobConnectionString = builder.Configuration["AzureStorageConnectionString"];
+
 //Services configuration
 builder.Services.AddScoped<INotificationsService, NotificationsService>();
 builder.Services.AddScoped<IPostsService, PostsService>();
 builder.Services.AddScoped<IHashtagsService, HashtagsService>();
 builder.Services.AddScoped<IStoriesService, StoriesService>();
-builder.Services.AddScoped<IFilesService, FilesService>();
+builder.Services.AddScoped<IFilesService>(s => new FilesService(blobConnectionString));
 builder.Services.AddScoped<IUsersService, UsersService>();
 builder.Services.AddScoped<IFriendsService, FriendsService>();
-
+builder.Services.AddScoped<IAdminService, AdminService>();
 
 //Identity configuration
 builder.Services.AddIdentity<User, IdentityRole<int>>(options =>

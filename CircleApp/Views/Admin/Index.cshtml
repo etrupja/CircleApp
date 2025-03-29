@@ -1,0 +1,76 @@
+﻿@model List<Post>
+
+<main id="site__main" class="p-2.5 h-[calc(100vh-var(--m-top))] mt-[--m-top]">
+
+    <div class="w-full">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 w-[90%] mx-auto">
+
+            @foreach (var post in Model)
+            {
+                TimeSpan timeSpanSincePosted = DateTime.UtcNow.Subtract(post.DateCreated);
+
+                string displayTime = timeSpanSincePosted switch
+                {
+                    var t when t.TotalDays >= 1 => $"{(int)t.TotalDays}d ago",
+                    var t when t.TotalHours >= 1 => $"{(int)t.TotalHours}h ago",
+                    var t when t.TotalMinutes >= 1 => $"{(int)t.TotalMinutes}m ago",
+                    _ => "Just now"
+                };
+
+                <div class="bg-white rounded-xl shadow-sm text-sm font-medium border1 h-full flex flex-col">
+
+                    @* Post heading *@
+                    <div class="flex gap-3 sm:p-4 p-2.5 text-sm font-medium">
+                        <a>
+                            <img src="@(!string.IsNullOrEmpty(post.User.ProfilePictureUrl) ?
+        post.User.ProfilePictureUrl :
+        Url.Content("~/images/avatar/user.png"))" class="w-9 h-9 rounded-full" />
+                        </a>
+
+                        <div class="flex-1">
+                            <a>
+                                <h4 class="text-black">@post.User.FullName</h4>
+                                <div class="text-xs text-gray-500/80" title="@post.DateCreated.ToString("MM/dd/yyyy HH:mm")"> @displayTime </div>
+                            </a>
+                        </div>
+
+                        <div class="flex -mr-1 space-x-2">
+                            <form asp-controller="Admin" asp-action="RejectReport" class="inline">
+                                <input type="hidden" name="postId" value="@post.Id" />
+                                <button type="submit" class="button-icon w-8 h-8 text-red-500 hover:text-red-700">
+                                    <ion-icon class="text-xl" name="close-outline"></ion-icon>
+                                </button>
+                            </form>
+
+                            <form asp-controller="Admin" asp-action="ApproveReport" class="inline">
+                                <input type="hidden" name="postId" value="@post.Id" />
+                                <button type="submit" class="button-icon w-8 h-8 text-green-500 hover:text-green-700">
+                                    <ion-icon class="text-xl" name="checkmark-outline"></ion-icon>
+                                </button>
+                            </form>
+                        </div>
+
+                    </div>
+
+                    @* Post content *@
+                    <a>
+                        <div class="sm:px-4 p-2.5 pt-0 w-full flex-1">
+                            <p class="font-normal">
+                                @post.Content
+                            </p>
+                        </div>
+                    </a>
+
+                    @if (!string.IsNullOrEmpty(post.ImageUrl))
+                    {
+                        <a>
+                            <div class="relative w-full h-full">
+                                <img src="@post.ImageUrl" class="sm:rounded-lg w-full h-full object-cover rounded-b-xl" />
+                            </div>
+                        </a>
+                    }
+                </div>
+            }
+        </div>
+    </div>
+</main>

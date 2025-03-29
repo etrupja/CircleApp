@@ -1,12 +1,15 @@
 ﻿using CircleApp.Controllers.Base;
+using CircleApp.Data.Helpers.Constants;
 using CircleApp.Data.Models;
 using CircleApp.Data.Services;
 using CircleApp.ViewModels.Users;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CircleApp.Controllers
 {
+    [Authorize(Roles = AppRoles.User)]
     public class UsersController : BaseController
     {
         private readonly IUsersService _userService;

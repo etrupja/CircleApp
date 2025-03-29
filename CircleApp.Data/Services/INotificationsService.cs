@@ -1,13 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using CircleApp.Data.Models;
 
 namespace CircleApp.Data.Services
 {
     public interface INotificationsService
     {
-        Task AddNewNotificationAsync(int userId, string message, string notificationType);
+        Task AddNewNotificationAsync(int userId, string notificationType, string userFullName, int? postId);
+        Task<int> GetUnreadNotificationsCountAsync(int userId);
+        Task<List<Notification>> GetNotifications(int userId);
+
+        Task SetNotificationAsReadAsync(int notificationId);
     }
 }

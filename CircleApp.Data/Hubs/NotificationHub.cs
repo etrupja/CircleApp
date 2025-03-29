@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.SignalR;
 
-namespace CircleApp.Hubs
+namespace CircleApp.Data.Hubs
 {
     public class NotificationHub:Hub
     {

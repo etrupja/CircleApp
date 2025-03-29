@@ -15,6 +15,8 @@ namespace CircleApp.Data.Models
 
         public string Type { get; set; }
 
+        public int? PostId { get; set; }
+
         public DateTime DateCreated { get; set; }
         public DateTime DateUpdated { get; set; }
     }
