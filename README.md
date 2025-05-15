@@ -70,6 +70,13 @@ Welcome to the Social Media Application course! In this repository, we will guid
 4. **Managing Data with Entity Framework**
 5. **Deploying to Azure**
 
+## How To Use This Repository
+The course is divided into parts, with each part having two branches:
+- **Branch Naming Convention**: For each part (e.g., Part 20), there are two branches:
+  - `<part_number>b` (e.g., `20b`): Represents the beginning of the video tutorial for that part.
+  - `<part_number>e` (e.g., `20e`): Represents the end of the video tutorial for that part, including all changes made during the tutorial.
+
+
 ## Contributing
 Feel free to fork this repository and contribute by submitting a pull request. Please ensure your changes are well-documented and tested.
 
