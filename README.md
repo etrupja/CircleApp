@@ -39,11 +39,11 @@ Welcome to the Social Media Application course! In this repository, we will guid
 ### Installation
 1. **Clone the Repository**:
     ```bash
-    git clone https://github.com/your-username/your-repo-name.git
+    git clone https://github.com/etrupja/CircleApp.git
     ```
 2. **Navigate to the Project Directory**:
     ```bash
-    cd your-repo-name
+    cd CircleApp
     ```
 3. **Install Dependencies**:
     ```bash
