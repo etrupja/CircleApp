@@ -1,0 +1,236 @@
+@page "/settings"
+@using CircleApp.ViewModels.Settings
+@inject UserManager<User> UserManager
+@inject IUsersService UsersService
+@inject IFilesService FilesService
+@inject NavigationManager Navigation
+
+<EditForm Model="profileVM" OnValidSubmit="HandleProfileUpdate">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <div class="max-w-3xl mx-auto">
+        <div class="box relative rounded-lg shadow-md">
+
+            <div class="flex items-center justify-between p-6 pb-4">
+                <form id="updateProfilePictureForm" class="flex items-center gap-4 w-full" enctype="multipart/form-data">
+                    <div class="relative w-12 h-12 shrink-0">
+                        <label for="imageUpload" class="cursor-pointer">
+                            <img id="imagePreview" src="@(!string.IsNullOrEmpty(profilePictureUrl) ? profilePictureUrl : "/images/avatar/user.png")" class="object-cover w-full h-full rounded-full" alt="Profile Picture Placeholder" />
+                            <input type="file" id="imageUpload" name="ProfilePictureImage" class="hidden" accept="image/png, image/jpeg" @onchange="HandleProfilePictureChange" />
+                        </label>
+
+                        <label for="imageUpload" class="p-0.5 rounded-full bg-slate-600 border-white absolute -bottom-2 -right-2 cursor-pointer">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-3 h-3 fill-white">
+                                <path d="M12 9a3.75 3.75 0 100 7.5A3.75 3.75 0 0012 9z" />
+                                <path fill-rule="evenodd" d="M9.344 3.071a49.52 49.52 0 015.312 0c.967.052 1.83.585 2.332 1.39l.821 1.317c.24.383.645.643 1.11.71.386.054.77.113 1.152.177 1.432.239 2.429 1.493 2.429 2.909V18a3 3 0 01-3 3h-15a3 3 0 01-3-3V9.574c0-1.416.997-2.67 2.429-2.909.382-.064.766-.123 1.151-.178a1.56 1.56 0 001.11-.71l.822-1.315a2.942 2.942 0 012.332-1.39zM6.75 12.75a5.25 5.25 0 1110.5 0 5.25 5.25 0 01-10.5 0zm12-1.5a.75.75 0 100-1.5.75.75 0 000 1.5z" clip-rule="evenodd" />
+                            </svg>
+                        </label>
+                    </div>
+                    <div>
+                        <h3 class="text-base font-semibold text-black">@profileVM.FullName</h3>
+                        <p class="text-sm text-blue-600 mt-1 font-normal">@profileVM.UserName</p>
+                    </div>
+                    <button type="submit" id="saveButton" class="hidden button bg-blue-500 text-white px-4 py-1 rounded ml-auto">Save</button>
+                </form>
+            </div>
+
+            <div class="relative border-b">
+                <nav class="nav__underline px-6 p-0 border-transparent -mb-px">
+                    <ul class="uk-slider-items w-[calc(100%+10px)] !overflow-hidden" uk-switcher="connect: #setting_tab; animation: uk-animation-slide-right-medium, uk-animation-slide-left-medium">
+                        <li class="w-auto pr-2.5">
+                            <a href="#">
+                                Update profile
+                            </a>
+                        </li>
+                        <li class="w-auto pr-2.5"><a href="#">Update password</a></li>
+                    </ul>
+                </nav>
+            </div>
+
+            <div id="setting_tab" class="uk-switcher py-12 px-20 overflow-hidden text-black text-sm">
+                <div>
+                    <EditForm Model="profileVM" OnValidSubmit="HandleProfileUpdate">
+                        <DataAnnotationsValidator />
+                        <ValidationSummary />
+
+                        <div class="space-y-6">
+                            @if (!string.IsNullOrEmpty(profileError))
+                            {
+                                <div class="text-red-500 mb-4">@profileError</div>
+                            }
+
+                            <div class="flex items-center gap-10">
+                                <label class="w-32 text-right">Full name</label>
+                                <div class="flex-1">
+                                    <InputText @bind-Value="profileVM.FullName" placeholder="Enter your full name" class="w-full" />
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-10">
+                                <label class="w-32 text-right">Username</label>
+                                <div class="flex-1">
+                                    <InputText @bind-Value="profileVM.UserName" placeholder="Enter your username" class="w-full" />
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-10">
+                                <label class="w-32 text-right">Bio</label>
+                                <div class="flex-1">
+                                    <InputTextArea @bind-Value="profileVM.Bio" rows="5" placeholder="Enter your bio" class="w-full" />
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-4 mt-16 pl-[10.5rem]">
+                                <button class="button px-6 bg-secondary">Cancel</button>
+                                <button type="submit" class="button px-10 bg-primary text-white">Save</button>
+                            </div>
+                        </div>
+                    </EditForm>
+                </div>
+                <div>
+                    <EditForm Model="passwordVM" OnValidSubmit="HandlePasswordUpdate">
+                        <DataAnnotationsValidator />
+                        <ValidationSummary />
+
+                        <div class="space-y-6">
+                            @if (!string.IsNullOrEmpty(passwordError))
+                            {
+                                <div class="text-red-500 mb-4">@passwordError</div>
+                            }
+
+                            @if (!string.IsNullOrEmpty(passwordSuccess))
+                            {
+                                <div class="text-green-500 mb-4">@passwordSuccess</div>
+                            }
+
+                            <div class="flex items-center gap-10">
+                                <label class="w-32 text-right">Current password</label>
+                                <div class="flex-1">
+                                    <InputText @bind-Value="passwordVM.CurrentPassword" type="password" placeholder="Enter your current password" class="w-full" />
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-10">
+                                <label class="w-32 text-right">New password</label>
+                                <div class="flex-1">
+                                    <InputText @bind-Value="passwordVM.NewPassword" type="password" placeholder="Enter your new password" class="w-full" />
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-10">
+                                <label class="w-32 text-right">Confirm password</label>
+                                <div class="flex-1">
+                                    <InputText @bind-Value="passwordVM.ConfirmPassword" type="password" placeholder="Confirm your new password" class="w-full" />
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-4 mt-16 pl-[10.5rem]">
+                                <button class="button px-6 bg-secondary">Cancel</button>
+                                <button type="submit" class="button px-10 bg-primary text-white">Save</button>
+                            </div>
+                        </div>
+                    </EditForm>
+                </div>
+            </div>
+        </div>
+    </div>
+</EditForm>
+
+@code {
+    private UpdateProfileVM profileVM = new UpdateProfileVM();
+    private UpdatePasswordVM passwordVM = new UpdatePasswordVM();
+    private string profilePictureUrl;
+    private string profileError;
+    private string passwordError;
+    private string passwordSuccess;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var loggedInUser = await UserManager.GetUserAsync(User);
+        if (loggedInUser == null)
+        {
+            Navigation.NavigateTo("/login");
+            return;
+        }
+
+        profileVM.FullName = loggedInUser.FullName;
+        profileVM.UserName = loggedInUser.UserName;
+        profileVM.Bio = loggedInUser.Bio;
+        profilePictureUrl = loggedInUser.ProfilePictureUrl;
+    }
+
+    private async Task HandleProfileUpdate()
+    {
+        var loggedInUser = await UserManager.GetUserAsync(User);
+        if (loggedInUser == null)
+        {
+            Navigation.NavigateTo("/login");
+            return;
+        }
+
+        loggedInUser.FullName = profileVM.FullName;
+        loggedInUser.UserName = profileVM.UserName;
+        loggedInUser.Bio = profileVM.Bio;
+
+        var result = await UserManager.UpdateAsync(loggedInUser);
+        if (!result.Succeeded)
+        {
+            profileError = "User profile could not be updated";
+            return;
+        }
+
+        await SignInManager.RefreshSignInAsync(loggedInUser);
+        Navigation.NavigateTo("/settings");
+    }
+
+    private async Task HandlePasswordUpdate()
+    {
+        if (passwordVM.NewPassword != passwordVM.ConfirmPassword)
+        {
+            passwordError = "Passwords do not match";
+            return;
+        }
+
+        var loggedInUser = await UserManager.GetUserAsync(User);
+        if (loggedInUser == null)
+        {
+            Navigation.NavigateTo("/login");
+            return;
+        }
+
+        var isCurrentPasswordValid = await UserManager.CheckPasswordAsync(loggedInUser, passwordVM.CurrentPassword);
+        if (!isCurrentPasswordValid)
+        {
+            passwordError = "Current password is invalid";
+            return;
+        }
+
+        var result = await UserManager.ChangePasswordAsync(loggedInUser, passwordVM.CurrentPassword, passwordVM.NewPassword);
+        if (!result.Succeeded)
+        {
+            passwordError = "Password could not be updated";
+            return;
+        }
+
+        passwordSuccess = "Password updated successfully";
+        await SignInManager.RefreshSignInAsync(loggedInUser);
+        Navigation.NavigateTo("/settings");
+    }
+
+    private async Task HandleProfilePictureChange(InputFileChangeEventArgs e)
+    {
+        var file = e.File;
+        if (file == null)
+        {
+            return;
+        }
+
+        var loggedInUser = await UserManager.GetUserAsync(User);
+        if (loggedInUser == null)
+        {
+            Navigation.NavigateTo("/login");
+            return;
+        }
+
+        var uploadedProfilePictureUrl = await FilesService.UploadImageAsync(file, Data.Helpers.Enums.ImageFileType.ProfilePicture);
+        await UsersService.UpdateUserProfilePicture(loggedInUser.Id, uploadedProfilePictureUrl);
+
+        profilePictureUrl = uploadedProfilePictureUrl;
+        StateHasChanged();
+    }
+}

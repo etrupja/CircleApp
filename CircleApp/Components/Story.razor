@@ -1,0 +1,59 @@
+@page "/story/{StoryId:int}"
+@inject IStoriesService StoriesService
+@inject NavigationManager NavigationManager
+
+@code {
+    [Parameter]
+    public int StoryId { get; set; }
+
+    private Story story;
+    private string displayTime;
+
+    protected override async Task OnInitializedAsync()
+    {
+        story = await StoriesService.GetStoryByIdAsync(StoryId);
+        if (story == null)
+        {
+            NavigationManager.NavigateTo("/");
+            return;
+        }
+
+        TimeSpan timeSpanSincePosted = DateTime.UtcNow.Subtract(story.DateCreated);
+        displayTime = timeSpanSincePosted switch
+        {
+            var t when t.TotalDays >= 1 => $"{(int)t.TotalDays}d ago",
+            var t when t.TotalHours >= 1 => $"{(int)t.TotalHours}h ago",
+            var t when t.TotalMinutes >= 1 => $"{(int)t.TotalMinutes}m ago",
+            _ => "Just now"
+        };
+    }
+}
+
+<div class="bg-white rounded-xl shadow-sm text-sm font-medium border1">
+    <div class="flex gap-3 sm:p-4 p-2.5 text-sm font-medium">
+        <a href="/users/details/@story.UserId">
+            <img src="@(!string.IsNullOrEmpty(story.User.ProfilePictureUrl) ? story.User.ProfilePictureUrl : "/images/avatar/user.png")" class="w-9 h-9 rounded-full" />
+        </a>
+        <div class="flex-1">
+            <a href="/users/details/@story.UserId">
+                <h4 class="text-black">@story.User.FullName</h4>
+                <div class="text-xs text-gray-500/80" title="@story.DateCreated.ToString("MM/dd/yyyy HH:mm")"> @displayTime </div>
+            </a>
+        </div>
+    </div>
+    <a href="/story/details/@story.Id">
+        <div class="sm:px-4 p-2.5 pt-0 w-full">
+            <p class="font-normal">
+                @story.Content
+            </p>
+        </div>
+    </a>
+    @if (!string.IsNullOrEmpty(story.ImageUrl))
+    {
+        <a href="/story/details/@story.Id">
+            <div class="relative w-full h-full">
+                <img src="@story.ImageUrl" class="sm:rounded-lg w-full h-full object-cover" />
+            </div>
+        </a>
+    }
+</div>

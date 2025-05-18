@@ -1,0 +1,17 @@
+@inherits LayoutComponentBase
+
+<PageTitle>Circle App</PageTitle>
+
+<div id="wrapper">
+    <TopBar />
+    <SideBar />
+    @Body
+</div>
+
+<style>
+    #wrapper {
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+    }
+</style>
