@@ -1,4 +1,3 @@
-
 using CircleApp.Data;
 using CircleApp.Data.Helpers;
 using CircleApp.Data.Models;
@@ -6,11 +5,14 @@ using CircleApp.Data.Services;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Web;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+builder.Services.AddRazorComponents(); // Register Blazor services
 
 //Database Configuration
 var dbConnectionString = builder.Configuration.GetConnectionString("Default");
@@ -22,7 +24,6 @@ builder.Services.AddScoped<IHashtagsService, HashtagsService>();
 builder.Services.AddScoped<IStoriesService, StoriesService>();
 builder.Services.AddScoped<IFilesService, FilesService>();
 builder.Services.AddScoped<IUsersService, UsersService>();
-
 
 //Identity configuration
 builder.Services.AddIdentity<User, IdentityRole<int>>(options =>
@@ -88,8 +89,7 @@ app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
 
-app.MapControllerRoute(
-    name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
+app.MapBlazorHub(); // Configure Blazor routing
+app.MapFallbackToPage("/_Host"); // Configure Blazor routing
 
 app.Run();

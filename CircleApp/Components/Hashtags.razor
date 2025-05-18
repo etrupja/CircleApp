@@ -1,0 +1,31 @@
+@page "/hashtags"
+@inject IHashtagsService HashtagsService
+
+<h3>Trending Hashtags</h3>
+
+@if (hashtags == null)
+{
+    <p>Loading...</p>
+}
+else if (!hashtags.Any())
+{
+    <p>No trending hashtags found.</p>
+}
+else
+{
+    <ul>
+        @foreach (var hashtag in hashtags)
+        {
+            <li>@hashtag.Name (@hashtag.Count)</li>
+        }
+    </ul>
+}
+
+@code {
+    private List<Hashtag> hashtags;
+
+    protected override async Task OnInitializedAsync()
+    {
+        hashtags = await HashtagsService.GetTrendingHashtagsAsync();
+    }
+}

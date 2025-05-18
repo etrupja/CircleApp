@@ -1,0 +1,123 @@
+@page "/login"
+@using CircleApp.ViewModels.Authentication
+@inject UserManager<User> UserManager
+@inject SignInManager<User> SignInManager
+@inject NavigationManager Navigation
+
+<EditForm Model="loginVM" OnValidSubmit="HandleLogin">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <div class="sm:flex">
+        <div class="relative lg:w-[580px] md:w-96 w-full p-10 min-h-screen bg-white shadow-xl flex items-center pt-10 z-10">
+            <div class="w-full lg:max-w-sm mx-auto space-y-10">
+                <div>
+                    <h2 class="text-2xl font-semibold mb-1.5">Sign in to your account</h2>
+                    <p class="text-sm text-gray-700 font-normal">If you have not signed up yet. <a href="/register" class="text-blue-700">Register here!</a></p>
+                </div>
+
+                <div class="space-y-7 text-sm text-black font-medium">
+                    <div>
+                        <label for="email">Email address</label>
+                        <div class="mt-2.5">
+                            <InputText id="email" @bind-Value="loginVM.Email" type="email" placeholder="Email" class="!w-full" />
+                            <ValidationMessage For="@(() => loginVM.Email)" class="text-red-500 text-xs mt-1" />
+                        </div>
+                    </div>
+                    <div>
+                        <label for="password">Password</label>
+                        <div class="mt-2.5">
+                            <InputText id="password" @bind-Value="loginVM.Password" type="password" placeholder="***" class="!w-full" />
+                            <ValidationMessage For="@(() => loginVM.Password)" class="text-red-500 text-xs mt-1" />
+                        </div>
+                    </div>
+
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center gap-2.5">
+                            <InputCheckbox id="rememberme" @bind-Value="rememberMe" />
+                            <label for="rememberme" class="font-normal">Remember me</label>
+                        </div>
+                        <a href="#" class="text-blue-700">Forget password</a>
+                    </div>
+
+                    <div>
+                        <button type="submit" class="button bg-primary text-white w-full">Sign in</button>
+                    </div>
+
+                    <div class="text-center flex items-center gap-6">
+                        <hr class="flex-1 border-slate-200">
+                        Or continue with
+                        <hr class="flex-1 border-slate-200">
+                    </div>
+
+                    <div class="flex gap-2">
+                        <button @onclick="() => ExternalLogin("Google")" class="button flex-1 flex items-center gap-2 bg-primary text-white text-sm"> <ion-icon name="logo-google" class="text-lg"></ion-icon> google </button>
+                        <button @onclick="() => ExternalLogin("GitHub")" class="button flex-1 flex items-center gap-2 bg-black text-white text-sm"><ion-icon name="logo-github" class="text-lg"></ion-icon> github </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="flex-1 relative bg-primary max-md:hidden">
+            <div class="relative w-full h-full" tabindex="-1" uk-slideshow="animation: slide; autoplay: true">
+                <ul class="uk-slideshow-items w-full h-full">
+                    <li class="w-full">
+                        <img src="~/images/welcome/welcome-01.png" alt="" class="w-full h-full object-cover uk-animation-kenburns uk-animation-reverse uk-transform-origin-center-left">
+                        <div class="absolute bottom-0 w-full uk-transition-slide-bottom-small z-10">
+                            <div class="max-w-xl w-full mx-auto pb-32 px-5 z-30 relative">
+                                <h4 class="!text-white text-2xl font-semibold mt-7" uk-slideshow-parallax="y: 600,0,0">Connect with Friends</h4>
+                                <p class="!text-white text-lg mt-7 leading-8" uk-slideshow-parallax="y: 800,0,0;">Bridge the gap between miles and moments—connect with friends and weave memories together, one click at a time.</p>
+                            </div>
+                        </div>
+                        <div class="w-full h-96 bg-gradient-to-t from-black absolute bottom-0 left-0"></div>
+                    </li>
+                    <li class="w-full">
+                        <img src="~/images/welcome/welcome-02.png" alt="" class="w-full h-full object-cover uk-animation-kenburns uk-animation-reverse uk-transform-origin-center-left">
+                        <div class="absolute bottom-0 w-full uk-transition-slide-bottom-small z-10">
+                            <div class="max-w-xl w-full mx-auto pb-32 px-5 z-30 relative">
+                                <h4 class="!text-white text-2xl font-semibold mt-7" uk-slideshow-parallax="y: 800,0,0">  Connect With Friends </h4>
+                                <p class="!text-white text-lg mt-7 leading-8" uk-slideshow-parallax="y: 800,0,0;"> Rekindle old ties and spark new ones—your next 'Remember when...' moment is just a friend request away.</p>
+                            </div>
+                        </div>
+                        <div class="w-full h-96 bg-gradient-to-t from-black absolute bottom-0 left-0"></div>
+                    </li>
+                </ul>
+                <div class="flex justify-center">
+                    <ul class="inline-flex flex-wrap justify-center  absolute bottom-8 gap-1.5 uk-dotnav uk-slideshow-nav"> </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</EditForm>
+
+@code {
+    private LoginVM loginVM = new LoginVM();
+    private bool rememberMe;
+
+    private async Task HandleLogin()
+    {
+        var existingUser = await UserManager.FindByEmailAsync(loginVM.Email);
+        if (existingUser == null)
+        {
+            // Handle invalid email or password
+            return;
+        }
+
+        var result = await SignInManager.PasswordSignInAsync(existingUser.UserName, loginVM.Password, rememberMe, false);
+        if (result.Succeeded)
+        {
+            Navigation.NavigateTo("/");
+        }
+        else
+        {
+            // Handle invalid login attempt
+        }
+    }
+
+    private void ExternalLogin(string provider)
+    {
+        var redirectUrl = Navigation.ToAbsoluteUri("/externallogincallback");
+        var properties = SignInManager.ConfigureExternalAuthenticationProperties(provider, redirectUrl.ToString());
+        Navigation.NavigateTo(properties.RedirectUri);
+    }
+}

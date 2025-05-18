@@ -1,4 +1,20 @@
-﻿@model GetUserProfileVM
+@page "/users/details/{userId:int}"
+@inject IUsersService UsersService
+@inject NavigationManager NavigationManager
+
+<PageTitle>User Details</PageTitle>
+
+@code {
+    [Parameter]
+    public int UserId { get; set; }
+
+    private GetUserProfileVM UserProfile { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        UserProfile = await UsersService.GetUserProfileAsync(UserId);
+    }
+}
 
 <main id="site__main" class="2xl:ml-[--w-side]  xl:ml-[--w-side-sm] p-2.5 h-[calc(100vh-var(--m-top))] mt-[--m-top]">
 
@@ -9,28 +25,23 @@
                 <div class="flex-shrink-0 mr-4">
                     <div class="relative lg:h-28 lg:w-28 w-28 h-28">
                         <div class="relative overflow-hidden rounded-full md:border-[6px] border-gray-100 shrink-0">
-                            <img src="@(string.IsNullOrEmpty(Model.User.ProfilePictureUrl) ? 
-                                Url.Content("~/images/avatar/user.png") : 
-                                Url.Content("~/"+Model.User.ProfilePictureUrl))" />
+                            <img src="@(string.IsNullOrEmpty(UserProfile.User.ProfilePictureUrl) ? 
+                                "/images/avatar/user.png" : 
+                                UserProfile.User.ProfilePictureUrl)" />
                         </div>
                     </div>
                 </div>
                 <div>
-                    <h3 class="md:text-3xl text-base font-bold text-black">@Model.User.FullName</h3>
-                    <p class="mt-2 text-gray-500">@Model.User.UserName</p>
+                    <h3 class="md:text-3xl text-base font-bold text-black">@UserProfile.User.FullName</h3>
+                    <p class="mt-2 text-gray-500">@UserProfile.User.UserName</p>
                 </div>
             </div>
         </div>
         <div class="flex 2xl:gap-12 gap-10 mt-8 max-lg:flex-col" id="js-oversized">
             <div class="flex-1 xl:space-y-6 space-y-3">
-                @foreach (var post in Model.Posts)
+                @foreach (var post in UserProfile.Posts)
                 {
-                    <partial name="Home/_Post" model="post"
-                             view-data='new ViewDataDictionary(ViewData)
-                            {
-                                { "ShowAllComment", false },
-                                {"ShowDetails", false }
-                            }' />
+                    <PostComponent Post="post" ShowAllComment="false" ShowDetails="false" />
                 }
             </div>
             <div class="lg:w-[400px]">
@@ -49,7 +60,7 @@
                         <div class="grid grid-cols-3 gap-2 gap-y-5 text-center text-sm mt-4 mb-2">
                             <div>
                                 <div class="relative w-full aspect-square rounded-lg overflow-hidden">
-                                    <img src="~/images/avatar/user.png" class="object-cover w-full h-full inset-0" />
+                                    <img src="/images/avatar/user.png" class="object-cover w-full h-full inset-0" />
                                 </div>
 
                                 <div class="mt-2 line-clamp-1">Ervis Trupja</div>
@@ -57,7 +68,7 @@
 
                             <div>
                                 <div class="relative w-full aspect-square rounded-lg overflow-hidden">
-                                    <img src="~/images/avatar/user.png" class="object-cover w-full h-full inset-0" />
+                                    <img src="/images/avatar/user.png" class="object-cover w-full h-full inset-0" />
                                 </div>
 
                                 <div class="mt-2 line-clamp-1">Ervis Trupja</div>
